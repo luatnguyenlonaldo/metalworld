@@ -38,7 +38,7 @@ public class BaseCrawler {
         URL url = new URL(urlString);
         URLConnection connection = url.openConnection();
         
-        String userAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.180 Mobile Safari/537.36";
+        String userAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) coc_coc_browser/85.0.134 Chrome/79.0.3945.134 Safari/537.36";
         connection.addRequestProperty("User-Agent", userAgent);
         InputStream is = connection.getInputStream();
         
@@ -49,9 +49,11 @@ public class BaseCrawler {
     protected XMLEventReader parseStringToXMLEventReader(String xmlSection) throws XMLStreamException, UnsupportedEncodingException {
         byte[] byteArray = xmlSection.getBytes("UTF-8");
         ByteArrayInputStream inputStream = new ByteArrayInputStream(byteArray);
+        
         XMLInputFactory factory = XMLInputFactory.newFactory();
         factory.setProperty(XMLInputFactory.IS_COALESCING, true);
-        XMLEventReader reader =  factory.createXMLEventReader(inputStream);
+        XMLEventReader reader = factory.createXMLEventReader(inputStream);
+        
         return reader;
     }
     

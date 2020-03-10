@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<categoryMappings
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://www.guitarpark.com/schema/categories-mapping'
+    xsi:schemaLocation='http://www.guitarpark.com/schema/categories-mapping categories-mapping.xsd'
+>
+    <categoryMapping>
+        <name>Anime – Game</name>
+        <mapping>Anime – Game</mapping>
+        <mapping>Anime</mapping>
+        <mapping>Game</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Đồ vật – Đồ chơi</name>
+        <mapping>Đồ vật – Đồ chơi</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Phương tiện</name>
+        <mapping>Phương tiện</mapping>
+        <mapping>Transportation</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Kiến trúc</name>
+        <mapping>Kiến trúc</mapping>
+        <mapping>Diorama</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Lễ hội</name>
+        <mapping>Lễ hội</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Động – Thực vật</name>
+        <mapping>Động – Thực vật</mapping>
+        <mapping>Animal</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Nhân vật</name>
+        <mapping>Người nổi tiếng</mapping>
+        <mapping>Movie and TV</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Minecraft</name>
+        <mapping>Minecraft</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Hoạt hình</name>
+        <mapping>Cartoon</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Khác</name>
+        <mapping>Other</mapping>
+    </categoryMapping>
+</categoryMappings>
