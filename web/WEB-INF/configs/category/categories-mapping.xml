@@ -41,28 +41,28 @@ and open the template in the editor.
     </categoryMapping>
     <categoryMapping>
         <name>Nhân Vật - Áo Giáp</name>
-        <mapping>Nhân Vật - Áo Giáp</mapping>
+        <mapping>Nhân Vật – Áo Giáp</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Mô Tô - Siêu Xe</name>
-        <mapping>Mô Tô - Siêu Xe</mapping>
+        <mapping>Mô Tô – Siêu Xe</mapping>
         <mapping>Siêu xe</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Động - Thực Vật</name>
         <mapping>Côn Trùng - Động Vật</mapping>
-        <mapping>Khủng Long - Rồng</mapping>
+        <mapping>Khủng Long – Rồng</mapping>
         <mapping>Động vật</mapping>
         <mapping>Hoa Cỏ</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Nhạc Cụ - Máy Quay</name>
-        <mapping>Nhạc Cụ - Máy Quay</mapping>
+        <mapping>Nhạc Cụ – Máy Quay</mapping>
         <mapping>Nhạc cụ</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Phim - Hoạt Hình</name>
-        <mapping>Disney - Đô Rê Mon</mapping>
+        <mapping>Disney – Đô Rê Mon</mapping>
         <mapping>Star Wars</mapping>
     </categoryMapping>
     <categoryMapping>

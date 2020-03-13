@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
  * @author Lonaldo
  */
 public class CategoryHelper {
+
     private CategoryMappings mappings;
     private ServletContext context;
 
@@ -22,26 +23,41 @@ public class CategoryHelper {
         this.mappings = (CategoryMappings) context.getAttribute("CATEGORY_MAPPINGS");
         this.context = context;
     }
-    
+
     public String getRealCategoryName(String altName) {
-        System.out.println("altName: " + altName);
+//        System.out.println("altName: " + altName);
+//        System.out.println("CATEGORY_MAPPINGS nek:");
+//        for (CategoryMapping categoryMapping : mappings.getCategoryMapping()) {
+//            System.out.println("===== " + categoryMapping.getName());
+//            for (String string : categoryMapping.getMapping()) {
+//                System.out.println(string);
+//            }
+//        }
         if (mappings == null || mappings.getCategoryMapping() == null) {
             System.out.println("Null roi ong giao a!!!");
             return null;
         }
-        
+
         for (CategoryMapping categoryMapping : mappings.getCategoryMapping()) {
-            System.out.println(categoryMapping.getMapping().toString());
+//            System.out.println(categoryMapping.getMapping().toString());
+//            for (String category : categoryMapping.getMapping()) {
+//                if (category.equals("altName")) {
+//                    System.out.println("===== CÓ EM NHOA =====");
+//                    System.out.println(categoryMapping.getName());
+//                    return categoryMapping.getName();
+//                }
+//            }
             if (categoryMapping.getMapping().contains(altName)) {
+                System.out.println("===== CÓ EM NHOA =====");
+                System.out.println("Name: " + categoryMapping.getName());
                 return categoryMapping.getName();
             }
         }
         return null;
     }
-    
+
     public synchronized static String generateUUID() {
-        return UUID.randomUUID(). toString();
+        return UUID.randomUUID().toString();
     }
-    
-    
+
 }

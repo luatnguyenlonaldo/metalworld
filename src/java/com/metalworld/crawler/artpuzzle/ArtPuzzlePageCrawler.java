@@ -47,8 +47,9 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
 
     @Override
     public void run() {
-//        System.out.println("Ten category nek: " + categoryName);
+        System.out.println("Ten category nek: " + categoryName);
         Category category = createCategory(categoryName);
+//        System.out.println(categoryName);
         if (category == null) {
             Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
             return;
@@ -93,7 +94,10 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
         synchronized (LOCK) {
             Category category = null;
             String realName = getRealCategoryName(name);
-            System.out.println("realName: " + realName);
+            if (realName == null) {
+                System.out.println("FUCK!!! realName of " + name + " is null!!!!!");
+            }
+            
             if (realName != null) {
                 CategoryDAO dao = CategoryDAO.getInstance();
                 category = dao.getFirstCategory(realName);
