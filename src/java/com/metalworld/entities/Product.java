@@ -7,16 +7,27 @@ package com.metalworld.entities;
 
 import com.metalworld.config.product.ProductEstimation;
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
@@ -24,58 +35,80 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "Product", catalog = "MetalWorld", schema = "dbo")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "Product", propOrder = {
+    "ProductId",
+    "ProductName",
+    "numOfSheets",
+    "numOfParts",
+    "difficulty",
+    "format",
+    "imageSrc",
+    "link",
+    "hasInstruction",
+    "estimateTime",
+    "categoryId"
+})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p")
-    , @NamedQuery(name = "Product.findByProductId", query = "SELECT p FROM Product p WHERE p.productId = :productId")
-    , @NamedQuery(name = "Product.findByProductName", query = "SELECT p FROM Product p WHERE p.productName = :productName")
-    , @NamedQuery(name = "Product.findByNumOfSheets", query = "SELECT p FROM Product p WHERE p.numOfSheets = :numOfSheets")
-    , @NamedQuery(name = "Product.findByNumOfParts", query = "SELECT p FROM Product p WHERE p.numOfParts = :numOfParts")
-    , @NamedQuery(name = "Product.findByDifficulty", query = "SELECT p FROM Product p WHERE p.difficulty = :difficulty")
-    , @NamedQuery(name = "Product.findByFormat", query = "SELECT p FROM Product p WHERE p.format = :format")
-    , @NamedQuery(name = "Product.findByImageSrc", query = "SELECT p FROM Product p WHERE p.imageSrc = :imageSrc")
-    , @NamedQuery(name = "Product.findByLink", query = "SELECT p FROM Product p WHERE p.link = :link")
-    , @NamedQuery(name = "Product.findByHasInstruction", query = "SELECT p FROM Product p WHERE p.hasInstruction = :hasInstruction")})
+    @NamedQuery(name = "Product.findAll", query = "SELECT m FROM Product m")
+    , @NamedQuery(name = "Product.findById", query = "SELECT m FROM Product m WHERE m.productId = :productId")
+    , @NamedQuery(name = "Product.findByName", query = "SELECT m FROM Product m WHERE m.productName LIKE :productName")
+    , @NamedQuery(name = "Product.findByNumOfSheets", query = "SELECT m FROM Product m WHERE m.numOfSheets = :numOfSheets")
+    , @NamedQuery(name = "Product.findByNumOfParts", query = "SELECT m FROM Product m WHERE m.numOfParts = :numOfParts")
+    , @NamedQuery(name = "Product.findByDifficulty", query = "SELECT m FROM Product m WHERE m.difficulty = :difficulty")
+    , @NamedQuery(name = "Product.findByFormat", query = "SELECT m FROM Product m WHERE m.format = :format")
+    , @NamedQuery(name = "Product.findByImageSrc", query = "SELECT m FROM Product m WHERE m.imageSrc = :imageSrc")
+    , @NamedQuery(name = "Product.findByLink", query = "SELECT m FROM Product m WHERE m.link = :link")
+    , @NamedQuery(name = "Product.findByHasInstruction",
+            query = "SELECT m FROM Product m WHERE m.hasInstruction = :hasInstruction")
+    , @NamedQuery(name = "Product.getCountModels", query = "SELECT count(m) FROM Product m")
+})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ProductId", nullable = false)
     @XmlElement(name = "id")
     private Integer productId;
-    
+
     @Column(name = "ProductName", length = 100)
     @XmlElement(name = "name")
     private String productName;
-    
+
     @Column(name = "NumOfSheets")
-        @XmlElement(name = "num-of-sheets")
+    @XmlElement(name = "num-of-sheets")
     private Integer numOfSheets;
-    
+
     @Column(name = "NumOfParts")
-        @XmlElement(name = "num-of-parts")
+    @XmlElement(name = "num-of-parts")
     private Integer numOfParts;
-    
+
     @Column(name = "Difficulty")
-        @XmlElement(name = "difficulty")
+    @XmlElement(name = "difficulty")
     private Integer difficulty;
-    
+
     @Column(name = "Format", length = 10)
-        @XmlElement(name = "format")
+    @XmlElement(name = "format")
     private String format;
-    
+
     @Column(name = "ImageSrc", length = 500)
-        @XmlElement(name = "image-src")
+    @XmlElement(name = "image-src")
     private String imageSrc;
-    
-    @Column(name = "Link", length = 255)
-        @XmlElement(name = "link")
+
+    @Column(name = "Link", length = 500)
+    @XmlElement(name = "link")
     private String link;
-    
+
     @Column(name = "HasInstruction")
-        @XmlElement(name = "has-instruction")
+    @XmlElement(name = "has-instruction")
     private Boolean hasInstruction;
+
+    @JoinColumn(name = "CategoryId", referencedColumnName = "Id")
+    @ManyToOne
+    private Category categoryId;
     
     @Transient
     @XmlElement(name = "estimate-time")
@@ -88,7 +121,9 @@ public class Product implements Serializable {
         this.productId = productId;
     }
 
-    public Product(Integer productId, String productName, Integer numOfSheets, Integer numOfParts, Integer difficulty, String format, String imageSrc, String link, Boolean hasInstruction) {
+    public Product(Integer productId, String productName, Integer numOfSheets, Integer numOfParts,
+            Integer difficulty, String format, String imageSrc, String link,
+            Boolean hasInstruction, Category categoryId) {
         this.productId = productId;
         this.productName = productName;
         this.numOfSheets = numOfSheets;
@@ -98,9 +133,8 @@ public class Product implements Serializable {
         this.imageSrc = imageSrc;
         this.link = link;
         this.hasInstruction = hasInstruction;
+        this.categoryId = categoryId;
     }
-
-    
 
     public Integer getProductId() {
         return productId;
@@ -114,7 +148,7 @@ public class Product implements Serializable {
         return productName;
     }
 
-    public void setProductName(String productName) {
+    public void setProductName(String name) {
         this.productName = productName;
     }
 
@@ -174,6 +208,14 @@ public class Product implements Serializable {
         this.hasInstruction = hasInstruction;
     }
 
+    public Category getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Category categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -196,7 +238,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.metalworld.entities.Product[ productId=" + productId + " ]";
+        return "com.metalworld.entities.Product[ prodictId=" + productId + " ]";
     }
     
     public Double getEstimateTime() {
@@ -245,7 +287,9 @@ public class Product implements Serializable {
         imageSrc = model.imageSrc;
         link = model.link;
         hasInstruction = model.hasInstruction;
+        categoryId = model.categoryId;
         estimateTime = model.estimateTime;
     }
-    
+
 }
+

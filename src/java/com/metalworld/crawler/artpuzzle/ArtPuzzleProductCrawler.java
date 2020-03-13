@@ -5,6 +5,7 @@
  */
 package com.metalworld.crawler.artpuzzle;
 
+import com.metalworld.constants.ConfigConstants;
 import com.metalworld.constants.URLConstants;
 import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.crawler.BaseThread;
@@ -32,7 +33,7 @@ import javax.xml.stream.events.XMLEvent;
  *
  * @author Lonaldo
  */
-public class ArtPuzzleProductCrawler extends BaseCrawler implements Runnable{
+public class ArtPuzzleProductCrawler extends BaseCrawler {
 
     private String pageUrl;
 
@@ -40,196 +41,205 @@ public class ArtPuzzleProductCrawler extends BaseCrawler implements Runnable{
         super(context);
         this.pageUrl = pageUrl.replaceAll(" ", "%20");
     }
-    
-    @Override
-    public void run() {
-        BufferedReader reader;
+
+    public Product getProduct() {
+        BufferedReader reader = null;
+        Product product = null;
         try {
-            reader = getBufferedReaderForUrl(pageUrl);
+            reader = getBufferReaderForUrl(pageUrl);
             String document = getModelsDocument(reader);
-            
-            document = TextUtils.refineHtml(document);
-            
-            parseAndSaveModels(document);
-        } catch (IOException | XMLStreamException | InterruptedException ex) {
-            Logger.getLogger(ArtPuzzleProductCrawler.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            System.out.println(document);
+            return stAXParserForModel(document);
+        } catch (IOException | InterruptedException | XMLStreamException e) {
+            Logger.getLogger(ArtPuzzleProductCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
+        return product;
     }
-    
+
     private String getModelsDocument(BufferedReader reader) throws IOException {
         String line;
-        String document = "<models>";
+        String document = "<modelDocument>";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
-            if (!isStart && line.contains("<ul class=\"products\"")) {
+//            System.out.println(line);
+            if (!isStart && line.contains("<div class=\"product-summary clearfix\">")) {
                 isStart = true;
+            }
+            if (isStart && line.contains("<div class=\"woocommerce-tabs wc-tabs-wrapper\"")) {
+                break;
             }
             if (isStart) {
                 document += line.trim();
             }
-            if (isStart && line.contains("</ul>")) {
-                break;
-            }
         }
-        document += "</models>";
+        document += "</modelDocument>";
 
         return document;
     }
-    
-    private void parseAndSaveModels(String document)
+
+    private Product stAXParserForModel(String document)
             throws UnsupportedEncodingException, XMLStreamException, InterruptedException {
+        document = TextUtils.refineHtml(document);
+
+        if (ConfigConstants.DEBUG && ConfigConstants.DEBUG_PRINT_DOC) {
+            System.out.println("DEBUG: model document: " + document);
+        }
+
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
+//        String name = getProductName(eventReader);
+//        if (name == null) return null;
+
+        String imageSrc = getProductImageSource(eventReader);
+        if (imageSrc == null || imageSrc.equals("")) {
+            System.out.println("Nothing here");
+        } else {
+            System.out.println("Link hinh nek: " + imageSrc);
+        }
+        Integer difficulty = getDifficulty(eventReader);
+        System.out.println("Độ khó nefk: " + difficulty);
+        Integer numOfSheets = getNumOfSheets(eventReader);
+        System.out.println("Số tờ nèk: " + numOfSheets);
+        Integer numOfParts = getNumOfParts(eventReader);
+        System.out.println("Số mảnh nefk: " + numOfParts);
+        
+//        String link = pageUrl;
+
+//        String name = getProductName();
+//        Product product = new Product(0, name, numOfSheets, numOfParts, 
+//                difficulty, null, imageSrc, link, Boolean.FALSE);
+        return null;
+    }
+
+    private String getProductName(XMLEventReader eventReader) {
+        String name = null;
         XMLEvent event;
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
-                if (ElementChecker.isElementWith(startElement, "tr")) {
-                    Product model = parseModel(eventReader);
-                    if (model == null) {
-                        continue;
-                    }
-
-                    ProductDAO.getInstance().saveModelWhileCrawling(getContext(), model);
-
-                    synchronized (BaseThread.getInstance()) {
-                        while (BaseThread.isSuspended()) {
-                            BaseThread.getInstance().wait();
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    private Product parseModel(XMLEventReader eventReader) {
-        String link = getModelLink(eventReader);
-        String imageSrc = null;
-        if (link != null) {
-            imageSrc = getImageSrc(eventReader);
-        } else {
-            return null;
-        }
-
-        String name = getName(eventReader);
-        Integer numOfParts = getNumOfParts(eventReader);
-        Integer numOfSheets = getNumOfSheets(eventReader);
-        String format = null;
-        Integer difficulty = 0;
-        Boolean hasInstruction = null;
-
-        Product model = new Product(0, name, numOfSheets, numOfParts, difficulty, format, 
-                imageSrc, link, hasInstruction);
-
-        return model;
-    }
-    
-    private String getModelLink(XMLEventReader eventReader) {
-        XMLEvent event;
-        while (eventReader.hasNext()) {
-            event = (XMLEvent) eventReader.next();
-            if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "td", "class", "m_1")) {
-                    eventReader.next();
-                    event = (XMLEvent) eventReader.next();
-
-                    
-                    element = event.asStartElement();
-                    String link = getHref(element);
-
-                    return link;
-                }
-            }
-        }
-        return null;
-    }
-    
-    private String getHref(StartElement element) {
-        Attribute hrefAttr = element.getAttributeByName(new QName("href"));
-        return hrefAttr == null ? null : hrefAttr.getValue();
-    }
-
-    private String getSrc(StartElement element) {
-        Attribute srcAttr = element.getAttributeByName(new QName("src"));
-        return srcAttr == null ? null : srcAttr.getValue();
-    }
-
-    private String getImageSrc(XMLEventReader eventReader) {
-        XMLEvent event;
-        while (eventReader.hasNext()) {
-            event = (XMLEvent) eventReader.next();
-            if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "img")) {
-                    String src = getSrc(element);
-                    return URLConstants.ARTPUZZLE + src;
-                }
-            }
-        }
-        return null;
-    }
-
-    private String getName(XMLEventReader eventReader) {
-        XMLEvent event;
-        while (eventReader.hasNext()) {
-            event = (XMLEvent) eventReader.next();
-            if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "td", "class", "m_2")) {
+                if (ElementChecker.isElementWith(startElement, "div", "class", "product_title entry-title")) {
                     event = (XMLEvent) eventReader.next();
                     Characters nameChars = event.asCharacters();
-                    return nameChars.getData();
+                    name = nameChars.getData();
+                    return name;
                 }
             }
         }
-        return null;
+        return name;
     }
-    
+
+    private String getProductImageSource(XMLEventReader eventReader) {
+        XMLEvent event;
+        String src = null;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "div", "class", "woocommerce-product-gallery__image woocommerce-main-image")) {
+                    Attribute srcAttr = startElement.getAttributeByName(new QName("data-thumb"));
+                    src = srcAttr.getValue();
+                    return src;
+                }
+            }
+        }
+        return src;
+    }
+
     private Integer getNumOfParts(XMLEventReader eventReader) {
         XMLEvent event;
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "td", "class", "m_4")) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "label")) {
                     event = (XMLEvent) eventReader.next();
-                    Characters numChars = event.asCharacters();
-                    
-                    String numStr = numChars.getData();
-                    Integer numOfParts = ParseUtils.extractNumber(numStr);
-                    
-                    return numOfParts;
+                    if (event.isEndElement()) {
+                        continue;
+                    }
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+
+                    if (text.contains("Số Mảnh Ghép")) {
+                        while (eventReader.hasNext()) {
+                            event = (XMLEvent) eventReader.next();
+                            if (event.isEndElement()) {
+                                continue;
+                            }
+                            if (event.isStartElement()) {
+                                StartElement tmpStartElement = event.asStartElement();
+                                if (ElementChecker.isElementWith(tmpStartElement, "span", "class", "swatch swatch-label circle")) {
+                                    event = (XMLEvent) eventReader.next();
+                                    if (event.isEndElement()) {
+                                        continue;
+                                    }
+                                    Characters charsElement = event.asCharacters();
+                                    return Integer.parseInt(charsElement.getData());
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return null;
+        return 0;
     }
-    
+
     private Integer getNumOfSheets(XMLEventReader eventReader) {
         XMLEvent event;
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "td", "class", "m_5")) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "label")) {
                     event = (XMLEvent) eventReader.next();
-                    Characters numChars = event.asCharacters();
-                    
-                    String numStr = numChars.getData();
-                    Integer numOfSheets = ParseUtils.extractNumber(numStr);
-                    
-                    return numOfSheets;
+                    if (event.isEndElement()) {
+                        continue;
+                    }
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+
+                    if (text.contains("Số Miếng Ghép")) {
+                        while (eventReader.hasNext()) {
+                            event = (XMLEvent) eventReader.next();
+                            if (event.isEndElement()) {
+                                continue;
+                            }
+                            if (event.isStartElement()) {
+                                StartElement tmpStartElement = event.asStartElement();
+                                if (ElementChecker.isElementWith(tmpStartElement, "span", "class", "swatch swatch-label circle")) {
+                                    event = (XMLEvent) eventReader.next();
+                                    if (event.isEndElement()) {
+                                        continue;
+                                    }
+                                    Characters charsElement = event.asCharacters();
+                                    return Integer.parseInt(charsElement.getData());
+                                }
+                            }
+                        }
+//                        numOfSheet = ParseUtils.extractNumber(text);
+                    }
                 }
             }
         }
-        return null;
+        return 0;
     }
 
-    private BufferedReader getBufferedReaderForUrl(String pageUrl) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Integer getDifficulty(XMLEventReader eventReader) {
+        XMLEvent event;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement element = event.asStartElement();
+                if (ElementChecker.isElementWith(element, "div", "class", "star-rating")) {
+                    event = (XMLEvent) eventReader.next();
+                    element = event.asStartElement();
+                    Attribute styleAttr = element.getAttributeByName(new QName("style"));
+                    String style = styleAttr.getValue();
+                    Integer difficultPercent = ParseUtils.extractNumber(style);
+                    return difficultPercent / 10;
+                }
+            }
+        }
+        return 0;
     }
-    
 }

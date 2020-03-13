@@ -9,7 +9,11 @@ import com.metalworld.constants.ConfigConstants;
 import com.metalworld.constants.URLConstants;
 import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.crawler.BaseThread;
+import com.metalworld.dao.category.CategoryDAO;
+import com.metalworld.entities.Category;
+import com.metalworld.utils.CategoryHelper;
 import com.metalworld.utils.ElementChecker;
+import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,48 +36,85 @@ import javax.xml.stream.events.XMLEvent;
  */
 public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
 
-    private static final String ARTPUZZLE_URL = URLConstants.ARTPUZZLE;
+    private String pageUrl;
+    private String categoryName;
 
-    public ArtPuzzlePageCrawler(String pageUrl, ServletContext context) {
+    public ArtPuzzlePageCrawler(ServletContext context, String pageUrl, String categoryName) {
         super(context);
+        this.pageUrl = pageUrl;
+        this.categoryName = categoryName;
     }
 
     @Override
     public void run() {
+//        System.out.println("Ten category nek: " + categoryName);
+        Category category = createCategory(categoryName);
+        if (category == null) {
+            Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
+            return;
+        }
         BufferedReader reader = null;
         try {
-            reader = getBufferReaderForUrl(ARTPUZZLE_URL);
+            reader = getBufferReaderForUrl(pageUrl);
             String document = getCategoryPageDocument(reader);
             synchronized (BaseThread.getInstance()) {
                 while (BaseThread.isSuspended()) {
                     BaseThread.getInstance().wait();
                 }
             }
-            System.out.println("DOCUMENT NEK BAKON: " + document);
+            document = TextUtils.refineHtml(document);
             int lastPage = getLastPage(document);
-            System.out.println("last page nek: " + lastPage);
-            return;
 
-//            for (int i = 1; i <= lastPage; i++) {
-//                String pageUrl = ARTPUZZLE_URL + "/page/" + i;
-//                Thread productCrawler = new Thread(
-//                    new ArtPuzzleProductCrawler(pageUrl, getContext()));
-//                productCrawler.start();
-//                
-////                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
-//                    productCrawler.join();
-////                }
-//                
-//                synchronized (BaseThread.getInstance()) {
-//                    while(BaseThread.isSuspended()) {
-//                        BaseThread.getInstance().wait();
-//                    }
+            for (int i = 1; i <= 2; i++) {
+                String categoryPageUrl = pageUrl + "/page/" + i;
+                Thread productCrawler = new Thread(
+                    new ArtPuzzleProductListCrawler(categoryPageUrl, getContext()));
+                productCrawler.start();
+                
+//                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
+                    productCrawler.join();
 //                }
-//            }
+                
+                synchronized (BaseThread.getInstance()) {
+                    while(BaseThread.isSuspended()) {
+                        BaseThread.getInstance().wait();
+                    }
+                }
+            }
         } catch (IOException | InterruptedException | XMLStreamException e) {
+            System.out.println("hello bro!!!");
             Logger.getLogger(ArtPuzzlePageCrawler.class.getName())
                     .log(Level.SEVERE, null, e);
         }
+    }
+    
+    private static final Object LOCK = new Object();
+    protected Category createCategory(String name) {
+        synchronized (LOCK) {
+            Category category = null;
+            String realName = getRealCategoryName(name);
+            System.out.println("realName: " + realName);
+            if (realName != null) {
+                CategoryDAO dao = CategoryDAO.getInstance();
+                category = dao.getFirstCategory(realName);
+                if (category == null) {
+                    category = new Category(CategoryHelper.generateUUID(), realName);
+                    dao.create(category);
+                }
+            }
+            return category;
+        }
+    }
+    
+    private String getRealCategoryName(String altName) {
+//        System.out.println("altName: " + altName);
+        CategoryHelper helper = new CategoryHelper(getContext());
+        return helper.getRealCategoryName(altName);
+    }
+    
+    private String getHref(StartElement a) {
+        Attribute href = a.getAttributeByName(new QName("href"));
+        return href == null ? "" : href.getValue();
     }
 
     private String getCategoryPageDocument(BufferedReader reader) throws IOException {
@@ -81,7 +122,6 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
         String document = "<categoryPages>";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
             if (!isStart && line.contains("<ul class='page-numbers'")) {
                 isStart = true;
             }
@@ -98,14 +138,9 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
 
     private int getLastPage(String document)
             throws UnsupportedEncodingException, XMLStreamException {
-        document = document.replaceAll("&hellip;", "LuatDepTrai");
-        System.out.println("AFTER REPLACE: " + document);
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
         XMLEvent event;
         String link = "";
-//        int lastPage = 1;
-//        boolean isStartCounter = false;
-        System.out.println("GET LAST PAGE: " + document);
         while (eventReader.hasNext()) {
             try {
                 event = (XMLEvent) eventReader.next();
@@ -113,23 +148,16 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
                     StartElement startElement = event.asStartElement();
                     if (ElementChecker.isElementWith(startElement, "a", "class", "page-numbers")) {
                         Attribute attrHref = startElement.getAttributeByName(new QName("href"));
-                        link = attrHref == null ? "" : attrHref.getValue();
+                        link = (attrHref == null ? "" : attrHref.getValue());
                     }
                 }
-//                else if (event.isEndElement()) {
-//                EndElement endElement = event.asEndElement();
-//                if (ElementChecker.isElementWith(endElement, "categoryPages")) {
-//                    break;
-//                }
-//            }
             } catch (Exception e) {
-                System.out.println("LOG CHO NAY NEK!!!");
                 Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, e);
                 break;
             }
         }
         if (link != null && !link.isEmpty()) {
-            String regex = "[0-9]+$";
+            String regex = "\\d+";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(link);
             if (matcher.find()) {

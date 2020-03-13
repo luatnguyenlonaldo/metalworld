@@ -8,6 +8,8 @@
     <class>com.metalworld.entities.Category</class>
     <class>com.metalworld.entities.Model</class>
     <class>com.metalworld.entities.Product</class>
+    <class>com.metalworld.categories_mapping.Product</class>
+    <class>com.metalworld.categories_mapping.Category</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost\LUATNTSE63087:1433;databaseName=MetalWorld"/>

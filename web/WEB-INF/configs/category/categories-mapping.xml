@@ -8,53 +8,109 @@ and open the template in the editor.
 
 <categoryMappings
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-    xmlns='http://www.guitarpark.com/schema/categories-mapping'
-    xsi:schemaLocation='http://www.guitarpark.com/schema/categories-mapping categories-mapping.xsd'
+    xmlns='http://xml.netbeans.org/schema/categories-mapping'
+    xsi:schemaLocation='http://xml.netbeans.org/schema/categories-mapping categories-mapping.xsd'
 >
     <categoryMapping>
-        <name>Anime – Game</name>
-        <mapping>Anime – Game</mapping>
-        <mapping>Anime</mapping>
-        <mapping>Game</mapping>
+        <name>Xe Tăng</name>
+        <mapping>Xe Tăng Chiến Đấu</mapping>
+        <mapping>Xe Tank</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Đồ vật – Đồ chơi</name>
-        <mapping>Đồ vật – Đồ chơi</mapping>
+        <name>Kiến Trúc Thế Giới</name>
+        <mapping>Kiến trúc thế giới</mapping>
+        <mapping>Kiến Trúc Thế Giới</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Phương tiện</name>
-        <mapping>Phương tiện</mapping>
-        <mapping>Transportation</mapping>
+        <name>Máy Bay Chiến Đấu</name>
+        <mapping>Máy bay chiến đấu</mapping>
+        <mapping>Máy Bay Chiến Đấu</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Kiến trúc</name>
-        <mapping>Kiến trúc</mapping>
-        <mapping>Diorama</mapping>
+        <name>Vũ Khí Quân Sự</name>
+        <mapping>Vũ Khí Quân Sự</mapping>
+        <mapping>Vũ khí tấn công</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Lễ hội</name>
-        <mapping>Lễ hội</mapping>
+        <name>Gundam</name>
+        <mapping>Gundam</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Động – Thực vật</name>
-        <mapping>Động – Thực vật</mapping>
-        <mapping>Animal</mapping>
+        <name>Robot</name>
+        <mapping>Robot</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Nhân vật</name>
-        <mapping>Người nổi tiếng</mapping>
-        <mapping>Movie and TV</mapping>
+        <name>Nhân Vật - Áo Giáp</name>
+        <mapping>Nhân Vật - Áo Giáp</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Minecraft</name>
-        <mapping>Minecraft</mapping>
+        <name>Mô Tô - Siêu Xe</name>
+        <mapping>Mô Tô - Siêu Xe</mapping>
+        <mapping>Siêu xe</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Hoạt hình</name>
-        <mapping>Cartoon</mapping>
+        <name>Động - Thực Vật</name>
+        <mapping>Côn Trùng - Động Vật</mapping>
+        <mapping>Khủng Long - Rồng</mapping>
+        <mapping>Động vật</mapping>
+        <mapping>Hoa Cỏ</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Nhạc Cụ - Máy Quay</name>
+        <mapping>Nhạc Cụ - Máy Quay</mapping>
+        <mapping>Nhạc cụ</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Phim - Hoạt Hình</name>
+        <mapping>Disney - Đô Rê Mon</mapping>
+        <mapping>Star Wars</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Tàu Lửa</name>
+        <mapping>Tàu Lửa</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Tàu thuyền</name>
+        <mapping>Tàu Chiến</mapping>
+        <mapping>Tàu Thủy - Thuyền Buồm</mapping>
+        <mapping>Tàu chiến</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Nhạc Cụ - Máy Quay</name>
+        <mapping>Nhạc Cụ - Máy Quay</mapping>
+        <mapping>Nhạc cụ</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Phi Thuyền</name>
+        <mapping>Phi Thuyền Không Gian</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Mô Hình Chibi</name>
+        <mapping>Mô Hình Chibi</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Mô Hình Ngoại Cỡ</name>
+        <mapping>Mô Hình Ngoại Cỡ</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Phố Đèn Trung Hoa</name>
+        <mapping>Phố Đèn Trung Hoa</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Dụng Cụ Lắp Ráp</name>
+        <mapping>Dụng Cụ Lắp Ráp</mapping>
+        <mapping>Dụng cụ lắp ráp</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Đế Xoay - Đèn Led</name>
+        <mapping>Đế Xoay - Đèn Led</mapping>
+    </categoryMapping>
+    <categoryMapping>
+        <name>Hộp Mica</name>
+        <mapping>Hộp Mica</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Khác</name>
-        <mapping>Other</mapping>
+        <mapping>Khác</mapping>
     </categoryMapping>
 </categoryMappings>

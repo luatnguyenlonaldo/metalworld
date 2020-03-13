@@ -12,5 +12,5 @@ package com.metalworld.constants;
 public class URLConstants {
 //    public static String MOHINH3D = "mohinh3dshop.com";
     public static String LAPRAP3D = "https://mohinhlaprap3d.com";
-    public static String ARTPUZZLE = "https://artpuzzle.vn/shop/";
+    public static String ARTPUZZLE = "https://artpuzzle.vn/shop";
 }

@@ -116,8 +116,10 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
         Product existedModel = getModelByLink(model.getLink());
         if (existedModel == null) {
             refineModel(context, model);
+            System.out.println("============== Save không được gì hết =============");
             return create(model);
         }
+        System.out.println("=============== OK rồi nha ==============");
         refineModel(context, model);
         model.setProductId(existedModel.getProductId());
         return update(model);

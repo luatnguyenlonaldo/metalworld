@@ -30,28 +30,37 @@ public class ArtPuzzleThread extends BaseThread implements Runnable {
     @Override
     public void run() {
 //        while (true) {
-            try {
-                Thread categoryCrawler = new Thread(new ArtPuzzlePageCrawler(URL, context));
-                categoryCrawler.start();
+        try {
+            ArtPuzzleCategoryCrawler categoryCrawler = new ArtPuzzleCategoryCrawler(context);
+            Map<String, String> categories = categoryCrawler.getcategories(URL);
+//                System.out.println("in nek:");
+            for (Map.Entry<String, String> entry : categories.entrySet()) {
+//                    System.out.println(entry.getKey());
+                Thread pageCrawlingThread = new Thread(new ArtPuzzlePageCrawler(context, entry.getKey(), entry.getValue()));
+                pageCrawlingThread.start();
+            }
+
+//                Thread categoryCrawler = new Thread(new ArtPuzzlePageCrawler(URL, context));
+//                categoryCrawler.start();
 //                Map<String, String> categories = categoryCrawler.getCategories(URL);
 //                for (Map.Entry<String, String> entry : categories.entrySet()) {
 ////                String value = entry.getValue();
 //                    System.out.println(entry.getValue());
 //                }
-                synchronized (BaseThread.getInstance()) {
-                    while (BaseThread.isSuspended()) {
-                        try {
-                            BaseThread.getInstance().wait();
-                        } catch (InterruptedException ex) {
-                            System.out.println("catch in BaeThread");
-                            Logger.getLogger(ArtPuzzleThread.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+            synchronized (BaseThread.getInstance()) {
+                while (BaseThread.isSuspended()) {
+                    try {
+                        BaseThread.getInstance().wait();
+                    } catch (InterruptedException ex) {
+                        System.out.println("catch in BaeThread");
+                        Logger.getLogger(ArtPuzzleThread.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } catch (Exception e) {
-                System.out.println("catch in artpuzzle thread");
-                Logger.getLogger(ArtPuzzleThread.class.getName()).log(Level.SEVERE, null, e);
             }
+        } catch (Exception e) {
+            System.out.println("catch in artpuzzle thread");
+            Logger.getLogger(ArtPuzzleThread.class.getName()).log(Level.SEVERE, null, e);
+        }
 //        }
     }
 }
