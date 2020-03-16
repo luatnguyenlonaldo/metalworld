@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlType;
     "numOfSheets",
     "numOfParts",
     "difficulty",
+    "price",
     "format",
     "imageSrc",
     "link",
@@ -89,6 +90,10 @@ public class Product implements Serializable {
     @Column(name = "Difficulty")
     @XmlElement(name = "difficulty")
     private Integer difficulty;
+    
+    @Column(name = "Price")
+    @XmlElement(name = "id")
+    private Integer price;
 
     @Column(name = "Format", length = 10)
     @XmlElement(name = "format")
@@ -106,10 +111,10 @@ public class Product implements Serializable {
     @XmlElement(name = "has-instruction")
     private Boolean hasInstruction;
 
-    @JoinColumn(name = "CategoryId", referencedColumnName = "Id")
+    @JoinColumn(name = "CategoryId", referencedColumnName = "CategoryId")
     @ManyToOne
     private Category categoryId;
-    
+
     @Transient
     @XmlElement(name = "estimate-time")
     private Double estimateTime;
@@ -122,13 +127,14 @@ public class Product implements Serializable {
     }
 
     public Product(Integer productId, String productName, Integer numOfSheets, Integer numOfParts,
-            Integer difficulty, String format, String imageSrc, String link,
+            Integer difficulty, Integer price, String format, String imageSrc, String link,
             Boolean hasInstruction, Category categoryId) {
         this.productId = productId;
         this.productName = productName;
         this.numOfSheets = numOfSheets;
         this.numOfParts = numOfParts;
         this.difficulty = difficulty;
+        this.price = price;
         this.format = format;
         this.imageSrc = imageSrc;
         this.link = link;
@@ -174,6 +180,14 @@ public class Product implements Serializable {
 
     public void setDifficulty(Integer difficulty) {
         this.difficulty = difficulty;
+    }
+    
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public String getFormat() {
@@ -240,7 +254,7 @@ public class Product implements Serializable {
     public String toString() {
         return "com.metalworld.entities.Product[ prodictId=" + productId + " ]";
     }
-    
+
     public Double getEstimateTime() {
         return estimateTime;
     }
@@ -272,12 +286,12 @@ public class Product implements Serializable {
 
         return totalTime;
     }
-    
+
     public void copyValueOf(Product model) {
         if (model == null) {
             return;
         }
-        
+
         productId = model.productId;
         productName = model.productName;
         numOfSheets = model.numOfSheets;
@@ -292,4 +306,3 @@ public class Product implements Serializable {
     }
 
 }
-

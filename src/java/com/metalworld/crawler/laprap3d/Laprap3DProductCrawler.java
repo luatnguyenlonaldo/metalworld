@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metalworld.crawler.artpuzzle;
+package com.metalworld.crawler.laprap3d;
 
 import com.metalworld.constants.ConfigConstants;
 import com.metalworld.crawler.BaseCrawler;
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -30,12 +32,12 @@ import javax.xml.stream.events.XMLEvent;
  *
  * @author Lonaldo
  */
-public class ArtPuzzleProductCrawler extends BaseCrawler {
+public class Laprap3DProductCrawler extends BaseCrawler {
 
     private String pageUrl;
     private Category category;
 
-    public ArtPuzzleProductCrawler(ServletContext context, String pageUrl, Category category) {
+    public Laprap3DProductCrawler(ServletContext context, String pageUrl, Category category) {
         super(context);
         this.pageUrl = pageUrl.replaceAll(" ", "%20");
         this.category = category;
@@ -47,24 +49,25 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         try {
             reader = getBufferReaderForUrl(pageUrl);
             String document = getModelsDocument(reader);
-            System.out.println(document);
             return stAXParserForModel(document);
         } catch (IOException | InterruptedException | XMLStreamException e) {
-            Logger.getLogger(ArtPuzzleProductCrawler.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(Laprap3DProductCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
         return product;
     }
 
-    private String getModelsDocument(BufferedReader reader) throws IOException {
+    private String getModelsDocument(BufferedReader reader) throws IOException, IOException {
         String line;
         String document = "<modelDocument>";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
 //            System.out.println(line);
-            if (!isStart && line.contains("<div class=\"product-summary clearfix\">")) {
+            if (!isStart && line.contains("<div class=\"product-main\"")) {
                 isStart = true;
+                line = line.substring(line.indexOf("<div class=\"product-main\""));
             }
-            if (isStart && line.contains("<div class=\"woocommerce-tabs wc-tabs-wrapper\"")) {
+            if (isStart && line.contains("div class=\"product-footer\"")) {
+                document += line.substring(0, line.indexOf("div class=\"product-footer\"") - 1);
                 break;
             }
             if (isStart) {
@@ -72,7 +75,6 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             }
         }
         document += "</modelDocument>";
-
         return document;
     }
 
@@ -85,10 +87,12 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         }
 
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
-        
-//        if (name == null) return null;
+//        System.out.println(document);
 
+//        if (name == null) return null;
+//        System.out.println("===== DOCUMENT NEK: " + document);
         String imageSrc = getProductImageSource(eventReader);
+
         if (imageSrc == null || imageSrc.equals("")) {
             System.out.println("Nothing here");
         } else {
@@ -96,16 +100,18 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         }
         String name = getProductName(eventReader);
         System.out.println("Name nek: " + name);
-        Integer difficulty = getDifficulty(eventReader);
-        System.out.println("Độ khó nefk: " + difficulty);
+        int price = getProductPrice(eventReader);
+        System.out.println("Price nek: " + price);
+//        Integer difficulty = getDifficulty(eventReader);
+//        System.out.println("Độ khó nefk: " + difficulty);
         Integer numOfSheets = getNumOfSheets(eventReader);
         System.out.println("Số tờ nèk: " + numOfSheets);
-        Integer numOfParts = getNumOfParts(eventReader);
-        System.out.println("Số mảnh nefk: " + numOfParts);
-        
-        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, 0, null, 
-                imageSrc, pageUrl, Boolean.FALSE, category);
-        return product;
+//        Integer numOfParts = getNumOfParts(eventReader);
+//        System.out.println("Số mảnh nefk: " + numOfParts);
+//        
+//        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, null, 
+//                imageSrc, pageUrl, Boolean.FALSE, category);
+        return null;
     }
 
     private String getProductName(XMLEventReader eventReader) {
@@ -115,7 +121,7 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
-                if (ElementChecker.isElementWith(startElement, "h1", "class", "product_title entry-title")) {
+                if (ElementChecker.isElementWith(startElement, "h1", "class", "product-title product_title entry-title")) {
                     event = (XMLEvent) eventReader.next();
                     Characters nameChars = event.asCharacters();
                     name = nameChars.getData();
@@ -133,7 +139,8 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
-                if (ElementChecker.isElementWith(startElement, "div", "class", "woocommerce-product-gallery__image woocommerce-main-image")) {
+                if (ElementChecker.isElementWith(startElement, "div", "class", "woocommerce-product-gallery__image slide first")) {
+//                    System.out.println("===== CÓ LINK RỒI NÈ!!! =====");
                     Attribute srcAttr = startElement.getAttributeByName(new QName("data-thumb"));
                     src = srcAttr.getValue();
                     return src;
@@ -141,6 +148,30 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             }
         }
         return src;
+    }
+
+    private Integer getProductPrice(XMLEventReader eventReader) {
+        XMLEvent event;
+        String price = null;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "span", "class", "woocommerce-Price-amount amount")) {
+                    event = (XMLEvent) eventReader.next();
+                    Characters nameChars = event.asCharacters();
+                    price = nameChars.getData().replace(".", "");
+//                    System.out.println("===== Price NEK: " + price);
+                    String regex = "[0-9]+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(price);
+                    if (matcher.find()) {
+                        return Integer.parseInt(matcher.group());
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
     private Integer getNumOfParts(XMLEventReader eventReader) {
@@ -188,7 +219,7 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
-                if (ElementChecker.isElementWith(startElement, "label")) {
+                if (ElementChecker.isElementWith(startElement, "strong")) {
                     event = (XMLEvent) eventReader.next();
                     if (event.isEndElement()) {
                         continue;
@@ -196,30 +227,29 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
                     Characters chars = event.asCharacters();
                     String text = chars.getData();
 
-                    if (text.contains("Số Miếng Ghép")) {
-                        while (eventReader.hasNext()) {
-                            event = (XMLEvent) eventReader.next();
-                            if (event.isEndElement()) {
-                                continue;
-                            }
-                            if (event.isStartElement()) {
-                                StartElement tmpStartElement = event.asStartElement();
-                                if (ElementChecker.isElementWith(tmpStartElement, "span", "class", "swatch swatch-label circle")) {
-                                    event = (XMLEvent) eventReader.next();
-                                    if (event.isEndElement()) {
-                                        continue;
-                                    }
-                                    Characters charsElement = event.asCharacters();
-                                    return Integer.parseInt(charsElement.getData());
-                                }
-                            }
+                    if (text.contains("Số tấm thép:")) {
+                        event = (XMLEvent) eventReader.next();
+                        event = (XMLEvent) eventReader.next();
+                        String charsElement = event.asCharacters().getData();
+                        if (charsElement.contains(",")) {
+                            String result = standardizedNumOfSheet(charsElement, ",");
+                            return Integer.parseInt(result) + 1;
                         }
-//                        numOfSheet = ParseUtils.extractNumber(text);
+                        if (charsElement.contains("&")) {
+                            String result = standardizedNumOfSheet(charsElement, "&");
+                            return Integer.parseInt(result) + 1;
+                        }
+                        return Integer.parseInt(charsElement.replace(" ", ""));
                     }
                 }
             }
         }
         return 0;
+    }
+
+    private String standardizedNumOfSheet(String element, String character) {
+        element = element.replace(" ", "");
+        return element.substring(0, element.indexOf(character));
     }
 
     private Integer getDifficulty(XMLEventReader eventReader) {
@@ -240,4 +270,5 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         }
         return 0;
     }
+
 }

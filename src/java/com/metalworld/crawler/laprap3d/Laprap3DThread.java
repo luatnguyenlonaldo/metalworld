@@ -27,30 +27,30 @@ public class Laprap3DThread extends BaseThread implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                Laprap3DCategoryCrawler categoryCrawler = new Laprap3DCategoryCrawler(context);
-                Map<String, String> categories = categoryCrawler.getCategories(URL);
-                for (Map.Entry<String, String> entry : categories.entrySet()) {
-//                String value = entry.getValue();
-                    System.out.println(entry.getValue());
-                }
-                synchronized (BaseThread.getInstance()) {
-                    while (BaseThread.isSuspended()) {
-                        try {
-                            BaseThread.getInstance().wait();
-                        } catch (InterruptedException ex) {
-                            System.out.println("catch in BaeThread");
-                            Logger.getLogger(Laprap3DThread.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+//        while (true) {
+        try {
+            Laprap3DCategoryCrawler categoryCrawler = new Laprap3DCategoryCrawler(context);
+            Map<String, String> categories = categoryCrawler.getCategories(URL);
+            for (Map.Entry<String, String> entry : categories.entrySet()) {
+              Thread pageCrawlingThread = new Thread(new Laprap3DPageCrawler(context, entry.getKey(), entry.getValue()));
+              pageCrawlingThread.start();
+//System.out.println("DATA nek: " + entry.getValue());
+            }
+            synchronized (BaseThread.getInstance()) {
+                while (BaseThread.isSuspended()) {
+                    try {
+                        BaseThread.getInstance().wait();
+                    } catch (InterruptedException ex) {
+                        System.out.println("catch in BaeThread");
+                        Logger.getLogger(Laprap3DThread.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } catch (Exception e) {
-                System.out.println("catch in laprap3d thread");
-                Logger.getLogger(Laprap3DThread.class.getName()).log(Level.SEVERE, null, e);
             }
-
+        } catch (Exception e) {
+            System.out.println("catch in laprap3d thread");
+            Logger.getLogger(Laprap3DThread.class.getName()).log(Level.SEVERE, null, e);
         }
+//        }
     }
 
 }

@@ -127,8 +127,9 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
     
     public synchronized void refineModel(ServletContext context, Product model) {
         ProductEstimation modelEstimation
-                = (ProductEstimation) context.getAttribute("MODEL_ESTIMATION");
+                = (ProductEstimation) context.getAttribute("PRODUCT_ESTIMATION");
         if (modelEstimation == null) {
+            System.out.println("================== PRODUCT ESTIMASTION null roi =============");
             return;
         }
 

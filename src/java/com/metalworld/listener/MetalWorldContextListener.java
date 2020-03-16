@@ -33,13 +33,15 @@ public class MetalWorldContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
         realPath = context.getRealPath("/");
-//        laprap3dThread = new Laprap3DThread(context);
-//        laprap3dThread.start();
         CategoryMappings categoryMappings = getCategoryMappings(realPath);
         context.setAttribute("CATEGORY_MAPPINGS", categoryMappings);
+        ProductEstimation productEstimation = getProductEstimationConfig(realPath);
+        context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
 
-        artpuzzleThread = new ArtPuzzleThread(context);
-        artpuzzleThread.start();
+//        artpuzzleThread = new ArtPuzzleThread(context);
+//        artpuzzleThread.start();
+        laprap3dThread = new Laprap3DThread(context);
+        laprap3dThread.start();
     }
 
     @Override

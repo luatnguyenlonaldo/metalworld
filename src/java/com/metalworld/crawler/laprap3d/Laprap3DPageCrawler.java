@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.metalworld.crawler.artpuzzle;
+package com.metalworld.crawler.laprap3d;
 
-import com.metalworld.constants.ConfigConstants;
-import com.metalworld.constants.URLConstants;
 import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.crawler.BaseThread;
 import com.metalworld.dao.category.CategoryDAO;
@@ -26,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
@@ -34,12 +31,12 @@ import javax.xml.stream.events.XMLEvent;
  *
  * @author Lonaldo
  */
-public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
+public class Laprap3DPageCrawler extends BaseCrawler implements Runnable {
 
     private String pageUrl;
     private String categoryName;
 
-    public ArtPuzzlePageCrawler(ServletContext context, String pageUrl, String categoryName) {
+    public Laprap3DPageCrawler(ServletContext context, String pageUrl, String categoryName) {
         super(context);
         this.pageUrl = pageUrl;
         this.categoryName = categoryName;
@@ -47,17 +44,16 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Ten category nek: " + categoryName);
-        Category category = createCategory(categoryName);
-//        System.out.println(categoryName);
-        if (category == null) {
-            Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
-            return;
-        }
+//        Category category = createCategory(categoryName);
+//        if (category == null) {
+//            Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
+//            return;
+//        }
         BufferedReader reader = null;
         try {
             reader = getBufferReaderForUrl(pageUrl);
             String document = getCategoryPageDocument(reader);
+//            System.out.println(document);
             synchronized (BaseThread.getInstance()) {
                 while (BaseThread.isSuspended()) {
                     BaseThread.getInstance().wait();
@@ -65,16 +61,13 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
             }
             document = TextUtils.refineHtml(document);
             int lastPage = getLastPage(document);
-
-            for (int i = 1; i <= 2; i++) {
+//            System.out.println("Last Page " + categoryName + " nek: " + lastPage);
+            for (int i = 1; i <= lastPage; i++) {
                 String categoryPageUrl = pageUrl + "/page/" + i;
                 Thread productCrawler = new Thread(
-                    new ArtPuzzleProductListCrawler(getContext(), categoryPageUrl, category));
+                    new Laprap3DProductListCrawler(getContext(), categoryPageUrl, null));
                 productCrawler.start();
-                
-//                if (i % ConfigConstants.CRAWL_THREAD_REDUCE > 0) {
-                    productCrawler.join();
-//                }
+                productCrawler.join();
                 
                 synchronized (BaseThread.getInstance()) {
                     while(BaseThread.isSuspended()) {
@@ -83,13 +76,13 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
                 }
             }
         } catch (IOException | InterruptedException | XMLStreamException e) {
-            System.out.println("hello bro!!!");
-            Logger.getLogger(ArtPuzzlePageCrawler.class.getName())
-                    .log(Level.SEVERE, null, e);
+            Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
+
     }
-    
+
     private static final Object LOCK = new Object();
+
     protected Category createCategory(String name) {
         synchronized (LOCK) {
             Category category = null;
@@ -97,7 +90,6 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
             if (realName == null) {
                 System.out.println("FUCK!!! realName of " + name + " is null!!!!!");
             }
-            
             if (realName != null) {
                 CategoryDAO dao = CategoryDAO.getInstance();
                 category = dao.getFirstCategory(realName);
@@ -109,72 +101,64 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
             return category;
         }
     }
-    
+
     private String getRealCategoryName(String altName) {
-//        System.out.println("altName: " + altName);
         CategoryHelper helper = new CategoryHelper(getContext());
         return helper.getRealCategoryName(altName);
     }
-    
-//    private String getHref(StartElement a) {
-//        Attribute href = a.getAttributeByName(new QName("href"));
-//        return href == null ? "" : href.getValue();
-//    }
 
     private String getCategoryPageDocument(BufferedReader reader) throws IOException {
         String line = "";
         String document = "<categoryPages>";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            if (!isStart && line.contains("<ul class='page-numbers'")) {
+//            System.out.println(line);
+
+            if (!isStart && line.contains("<nav class=\"woocommerce-pagination\"")) {
                 isStart = true;
+//                System.out.println(line);
             }
             if (isStart) {
-                document += line.trim();
-            }
-            if (isStart && line.contains("</ul>")) {
+                String tmpDocument = line.trim();
+                int indexStartElement = tmpDocument.indexOf("<nav class=\"woocommerce-pagination\"");
+//                System.out.println("========== START INDEX: " + indexStartElement);
+                int indexEndElement = tmpDocument.indexOf("</nav>");
+//                System.out.println("========== END INDEX: " + indexEndElement);
+                if ((indexEndElement > 0) || (indexStartElement > 0)) {
+                    document += tmpDocument.substring(indexStartElement, indexEndElement);
+                }
                 break;
             }
         }
-        document += "</categoryPages>";
+        document += "<categoryPages>";
+        System.out.println("AFTER CUTTING: " + document);
         return document;
     }
 
-    private int getLastPage(String document)
-            throws UnsupportedEncodingException, XMLStreamException {
+    private int getLastPage(String document) throws XMLStreamException, UnsupportedEncodingException {
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
         XMLEvent event;
         String link = "";
+        int lastPageNumber = 1;
         while (eventReader.hasNext()) {
             try {
                 event = (XMLEvent) eventReader.next();
                 if (event.isStartElement()) {
                     StartElement startElement = event.asStartElement();
-                    if (ElementChecker.isElementWith(startElement, "a", "class", "page-numbers")) {
+                    if (ElementChecker.isElementWith(startElement, "a", "class", "page-number")) {
                         Attribute attrHref = startElement.getAttributeByName(new QName("href"));
                         link = (attrHref == null ? "" : attrHref.getValue());
+                        String[] hrefTokens = link.split("/");
+                        String pageStr = hrefTokens[hrefTokens.length - 1];
+
+                        lastPageNumber = Integer.parseInt(pageStr);
                     }
                 }
             } catch (Exception e) {
-                Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, e);
                 break;
             }
         }
-        if (link != null && !link.isEmpty()) {
-            String regex = "\\d+";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(link);
-            if (matcher.find()) {
-                String result = matcher.group();
-                try {
-                    int number = Integer.parseInt(result);
-                    return number;
-                } catch (NumberFormatException e) {
-                    Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, e);
-                }
-            }
-        }
-
-        return 1;
+        return lastPageNumber;
     }
 }

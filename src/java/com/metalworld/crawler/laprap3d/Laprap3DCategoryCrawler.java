@@ -58,8 +58,8 @@ public class Laprap3DCategoryCrawler extends BaseCrawler {
 //            }
             if (!isStart && line.contains("<ul class='nav-dropdown nav-dropdown-default'>")) {
                 isStart = true;
-                System.out.println("DDAX START: " + line);
-                System.out.println(line.length() + " " + line.indexOf("<ul class='nav-dropdown nav-dropdown-default'>") + " " + line.indexOf("</ul>"));
+//                System.out.println("DDAX START: " + line);
+//                System.out.println(line.length() + " " + line.indexOf("<ul class='nav-dropdown nav-dropdown-default'>") + " " + line.indexOf("</ul>"));
                 document += line.substring(line.indexOf("<ul class='nav-dropdown nav-dropdown-default'>"),
                         line.indexOf("</li><li id=\"menu-item-2130\""));
                 break;
@@ -70,7 +70,7 @@ public class Laprap3DCategoryCrawler extends BaseCrawler {
 
     public Map<String, String> stAXParserForCategories(String document) {
         document = document.trim();
-        System.out.println("document nek: " + document);
+//        System.out.println("document nek: " + document);
         XMLEventReader eventReader = null;
         try {
             eventReader = parseStringToXMLEventReader(document);
