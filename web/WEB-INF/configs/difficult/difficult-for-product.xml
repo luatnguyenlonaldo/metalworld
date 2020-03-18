@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<difficultMappings
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns='http://xml.netbeans.org/schema/difficult-for-product'
+    xsi:schemaLocation='http://xml.netbeans.org/schema/difficult-for-product difficult-for-product.xsd'>
+    <difficultMapping>
+        <name>2</name>
+        <mapping>dễ</mapping>
+    </difficultMapping>
+    <difficultMapping>
+        <name>5</name>
+        <mapping>trung bình</mapping>
+    </difficultMapping>
+    <difficultMapping>
+        <name>9</name>
+        <mapping>khó</mapping>
+    </difficultMapping>
+</difficultMappings>

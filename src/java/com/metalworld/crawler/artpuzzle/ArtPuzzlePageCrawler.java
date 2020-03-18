@@ -5,8 +5,6 @@
  */
 package com.metalworld.crawler.artpuzzle;
 
-import com.metalworld.constants.ConfigConstants;
-import com.metalworld.constants.URLConstants;
 import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.crawler.BaseThread;
 import com.metalworld.dao.category.CategoryDAO;
@@ -26,7 +24,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 

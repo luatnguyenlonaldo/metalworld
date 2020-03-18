@@ -11,6 +11,7 @@ import com.metalworld.entities.Category;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.ElementChecker;
 import com.metalworld.utils.ParseUtils;
+import com.metalworld.utils.ProductHelper;
 import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -102,10 +103,11 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         System.out.println("Name nek: " + name);
         int price = getProductPrice(eventReader);
         System.out.println("Price nek: " + price);
-//        Integer difficulty = getDifficulty(eventReader);
-//        System.out.println("Độ khó nefk: " + difficulty);
+        
         Integer numOfSheets = getNumOfSheets(eventReader);
         System.out.println("Số tờ nèk: " + numOfSheets);
+        Integer difficulty = getDifficulty(eventReader);
+        System.out.println("Độ khó nefk: " + difficulty);
 //        Integer numOfParts = getNumOfParts(eventReader);
 //        System.out.println("Số mảnh nefk: " + numOfParts);
 //        
@@ -257,18 +259,47 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         while (eventReader.hasNext()) {
             event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
-                StartElement element = event.asStartElement();
-                if (ElementChecker.isElementWith(element, "div", "class", "star-rating")) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "strong")) {
                     event = (XMLEvent) eventReader.next();
-                    element = event.asStartElement();
-                    Attribute styleAttr = element.getAttributeByName(new QName("style"));
-                    String style = styleAttr.getValue();
-                    Integer difficultPercent = ParseUtils.extractNumber(style);
-                    return difficultPercent / 10;
+                    if (event.isEndElement()) {
+                        continue;
+                    }
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+
+                    if (text.contains("Độ khó:")) {
+                        event = (XMLEvent) eventReader.next();
+                        event = (XMLEvent) eventReader.next();
+                        String charsElement = event.asCharacters().getData();
+                        Pattern pattern = Pattern.compile("[0-9]+");
+                        Matcher matcher = pattern.matcher(charsElement);
+                        if (matcher.find()) {
+                            System.out.println("===== ĐỘ KHÓ NEK: " + matcher.group());
+                        } else {
+                            System.out.println("---- IN RA NEK:" + charsElement);
+                            if (charsElement.charAt(0) == ' ') {
+                                charsElement = charsElement.substring(1);
+                                System.out.println("===== HAsHas:" + charsElement);
+                            }
+                            String realDifficult = getRealDifficultPoint(charsElement);
+                            if (realDifficult == null) {
+                                System.out.println("===== NULL nek: " + charsElement);
+                            }
+                            System.out.println("===== RIU DIFFICULT NEK: " + realDifficult);
+//                            Integer difficultPoint = ParseUtils.extractNumber(charsElement);
+                        }
+//                        if (charsElement)
+                        return Integer.parseInt(charsElement.replace(" ", ""));
+                    }
                 }
             }
         }
         return 0;
     }
-
+    
+    private String getRealDifficultPoint(String altDifficult) {
+        ProductHelper helper = new ProductHelper(getContext());
+        return helper.getRealDifficult(altDifficult);
+    }
 }
