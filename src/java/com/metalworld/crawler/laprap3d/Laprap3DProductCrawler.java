@@ -10,7 +10,6 @@ import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.entities.Category;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.ElementChecker;
-import com.metalworld.utils.ParseUtils;
 import com.metalworld.utils.ProductHelper;
 import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
@@ -103,7 +102,7 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         System.out.println("Name nek: " + name);
         int price = getProductPrice(eventReader);
         System.out.println("Price nek: " + price);
-        
+
         Integer numOfSheets = getNumOfSheets(eventReader);
         System.out.println("Số tờ nèk: " + numOfSheets);
         Integer difficulty = getDifficulty(eventReader);
@@ -251,6 +250,7 @@ public class Laprap3DProductCrawler extends BaseCrawler {
 
     private String standardizedNumOfSheet(String element, String character) {
         element = element.replace(" ", "");
+        element = element.replace(" ", "");
         return element.substring(0, element.indexOf(character));
     }
 
@@ -275,29 +275,30 @@ public class Laprap3DProductCrawler extends BaseCrawler {
                         Pattern pattern = Pattern.compile("[0-9]+");
                         Matcher matcher = pattern.matcher(charsElement);
                         if (matcher.find()) {
-                            System.out.println("===== ĐỘ KHÓ NEK: " + matcher.group());
-                        } else {
-                            System.out.println("---- IN RA NEK:" + charsElement);
-                            if (charsElement.charAt(0) == ' ') {
-                                charsElement = charsElement.substring(1);
-                                System.out.println("===== HAsHas:" + charsElement);
+                            System.out.println("===== ĐỘ KHO NEK: " + matcher.group());
+                            charsElement = charsElement.replace(" ", "");
+                            String[] tmpDifficult = charsElement.split("/");
+                            if (tmpDifficult.length == 1) {
+                                return Integer.parseInt(matcher.group());
+                            } else {
+                                double result = Double.parseDouble(tmpDifficult[0]) * 10 / Double.parseDouble(tmpDifficult[1].substring(0, 1));
+                                return (int) Math.round(result);
                             }
+                        } else {
+                            charsElement = charsElement.replace(" ", "");
                             String realDifficult = getRealDifficultPoint(charsElement);
                             if (realDifficult == null) {
                                 System.out.println("===== NULL nek: " + charsElement);
                             }
-                            System.out.println("===== RIU DIFFICULT NEK: " + realDifficult);
-//                            Integer difficultPoint = ParseUtils.extractNumber(charsElement);
+                            return Integer.parseInt(realDifficult);
                         }
-//                        if (charsElement)
-                        return Integer.parseInt(charsElement.replace(" ", ""));
                     }
                 }
             }
         }
         return 0;
     }
-    
+
     private String getRealDifficultPoint(String altDifficult) {
         ProductHelper helper = new ProductHelper(getContext());
         return helper.getRealDifficult(altDifficult);

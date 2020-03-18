@@ -31,8 +31,6 @@ public class ProductHelper {
 
         for (DifficultMapping difficultMapping : mappings.getDifficultMapping()) {
             if (difficultMapping.getMapping().contains(altDifficult)) {
-                System.out.println("===== CÓ EM NHOA =====");
-                System.out.println("Name: " + difficultMapping.getName());
                 return difficultMapping.getName();
             }
         }

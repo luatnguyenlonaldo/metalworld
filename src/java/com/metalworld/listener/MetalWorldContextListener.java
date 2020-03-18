@@ -41,15 +41,11 @@ public class MetalWorldContextListener implements ServletContextListener {
         context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
         DifficultMappings difficultMappings = getDifficultMappings(realPath);
         context.setAttribute("DIFFICULT_MAPPINGS", difficultMappings);
-        List<DifficultMapping> mappingList = difficultMappings.getDifficultMapping();
-        for (DifficultMapping difficultMapping : mappingList) {
-            System.out.println(difficultMapping.getName());
-        }
 
-//        artpuzzleThread = new ArtPuzzleThread(context);
-//        artpuzzleThread.start();
-        laprap3dThread = new Laprap3DThread(context);
-        laprap3dThread.start();
+        artpuzzleThread = new ArtPuzzleThread(context);
+        artpuzzleThread.start();
+//        laprap3dThread = new Laprap3DThread(context);
+//        laprap3dThread.start();
     }
 
     @Override

@@ -17,12 +17,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
@@ -47,7 +50,7 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         try {
             reader = getBufferReaderForUrl(pageUrl);
             String document = getModelsDocument(reader);
-            System.out.println(document);
+//            System.out.println(document);
             return stAXParserForModel(document);
         } catch (IOException | InterruptedException | XMLStreamException e) {
             Logger.getLogger(ArtPuzzleProductCrawler.class.getName()).log(Level.SEVERE, null, e);
@@ -85,9 +88,8 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         }
 
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
-        
-//        if (name == null) return null;
 
+//        if (name == null) return null;
         String imageSrc = getProductImageSource(eventReader);
         if (imageSrc == null || imageSrc.equals("")) {
             System.out.println("Nothing here");
@@ -96,14 +98,20 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         }
         String name = getProductName(eventReader);
         System.out.println("Name nek: " + name);
+
+        Integer price = getProductPrice(eventReader);
+        System.out.println("Giá tiền nèk: " + price);
+
         Integer difficulty = getDifficulty(eventReader);
         System.out.println("Độ khó nefk: " + difficulty);
+
         Integer numOfSheets = getNumOfSheets(eventReader);
         System.out.println("Số tờ nèk: " + numOfSheets);
+
         Integer numOfParts = getNumOfParts(eventReader);
         System.out.println("Số mảnh nefk: " + numOfParts);
-        
-        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, 0, null, 
+
+        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, price, null,
                 imageSrc, pageUrl, Boolean.FALSE, category);
         return product;
     }
@@ -141,6 +149,39 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
             }
         }
         return src;
+    }
+
+    private Integer getProductPrice(XMLEventReader eventReader) {
+        XMLEvent event;
+        String price = null;
+        Integer resultPrice = null;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "span", "class", "woocommerce-Price-amount amount")) {
+                    event = (XMLEvent) eventReader.next();
+                    Characters nameChars = event.asCharacters();
+                    price = nameChars.getData().replace(",", "");
+//                    System.out.println("===== Price NEK: " + price);
+                    String regex = "[0-9]+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(price);
+                    if (matcher.find()) {
+                        resultPrice = Integer.parseInt(matcher.group());
+                    }
+
+                    for (int i = 0; i < 5; i++) {
+                        event = (XMLEvent) eventReader.next();
+                    }
+                    EndElement endElement = event.asEndElement();
+                    if (!ElementChecker.isElementWith(endElement, "del")) {
+                        break;
+                    }
+                }
+            }
+        }
+        return resultPrice;
     }
 
     private Integer getNumOfParts(XMLEventReader eventReader) {
