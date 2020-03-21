@@ -4,4 +4,6 @@
     <system systemId="file:/D:/STUDY/CN8_SPRING2020/PRX301/MetalWorld/web/WEB-INF/configs/category/categories-mapping.xsd" uri="src/conf/xml-resources/jaxb/%20CategoryMappings/categories-mapping.xsd"/>
     <system systemId="file:/D:/STUDY/CN8_SPRING2020/PRX301/MetalWorld/web/WEB-INF/configs/product/estimation-for-product.xsd" uri="src/conf/xml-resources/jaxb/ProductEstimation/estimation-for-product.xsd"/>
     <system systemId="file:/D:/STUDY/CN8_SPRING2020/PRX301/MetalWorld/web/WEB-INF/configs/difficult/difficult-for-product.xsd" uri="src/conf/xml-resources/jaxb/DifficultMappings/difficult-for-product.xsd"/>
+    <system systemId="file:/D:/STUDY/CN8_SPRING2020/PRX301/MetalWorld/web/WEB-INF/configs/crawler/crawler-config.xsd" uri="src/conf/xml-resources/jaxb/CrawlerConfig/crawler-config.xsd"/>
+    <system systemId="file:/D:/STUDY/CN8_SPRING2020/PRX301/MetalWorld/web/xsl/model-list.xsl" uri="src/conf/xml-resources/jaxb/ModelList/model-list.xsl.xml"/>
 </catalog>

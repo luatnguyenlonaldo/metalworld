@@ -68,7 +68,7 @@ public class Laprap3DProductListCrawler extends BaseCrawler implements Runnable 
                     System.out.println("Co data nha!!!");
                 }
                 
-//                ProductDAO.getInstance().saveModelWhileCrawling(getContext(), product);
+                ProductDAO.getInstance().saveModelWhileCrawling(getContext(), product);
                 
                 if (ConfigConstants.DEBUG) {
                     System.out.println("DEBUG saved product " + product.getLink());

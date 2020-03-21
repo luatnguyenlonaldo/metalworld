@@ -1,0 +1,110 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 20, 2020, 10:12:03 AM
+    Author     : Lonaldo
+*/
+
+body {
+    padding-left: 2em;
+    padding-right: 2em;
+    background-image: url(../img/trianglify-lowres.png);
+    background-size: 100%;
+}
+
+.app-logo {
+    text-align: center;
+}
+
+.heading-title {
+    text-align: center;
+}
+
+.addon-custom {
+    width: 100px;
+}
+
+.bg-primary {
+    background: #C6D8FF !important;
+    color: black;
+}
+
+.bg-primary-emphasis {
+    background: #B4C5E8 !important;
+}
+
+.btn-primary:hover {
+    background-color: #6B5CA5 !important;
+}
+
+.btn-primary:active {
+    background-color: #9388BD !important;
+}
+
+#section-search-result {
+    margin: 0 auto;
+    margin-top: 20px;
+    display: none;
+}
+
+#section-model-detail {
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+#div-loading {
+    height: 100vh !important;
+}
+
+.footer {
+    background: #4B71A4;
+    color: white;
+    padding: 5px;
+}
+
+.bg-super-easy {
+    background: #ACD8AA !important;
+}
+
+.bg-easy {
+    background: #F3E37C !important;
+}
+
+.bg-normal {
+    background: #F4AF4A !important;
+}
+
+.bg-hard {
+    background: #E88F8B !important;
+}
+
+.bg-super-hard {
+    background: #B993B9 !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+.show-flex {
+    display: flex !important;
+}
+
+.column {
+    padding: 1em;
+}
+
+.pagination {
+    display: block;
+}
+
+.pagination .page-item {
+    float: left;
+}
+
+.no-border {
+    border: none!important;
+}

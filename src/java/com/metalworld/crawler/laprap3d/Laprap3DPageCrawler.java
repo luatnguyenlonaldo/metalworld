@@ -44,11 +44,11 @@ public class Laprap3DPageCrawler extends BaseCrawler implements Runnable {
 
     @Override
     public void run() {
-//        Category category = createCategory(categoryName);
-//        if (category == null) {
-//            Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
-//            return;
-//        }
+        Category category = createCategory(categoryName);
+        if (category == null) {
+            Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
+            return;
+        }
         BufferedReader reader = null;
         try {
             reader = getBufferReaderForUrl(pageUrl);
@@ -65,7 +65,7 @@ public class Laprap3DPageCrawler extends BaseCrawler implements Runnable {
             for (int i = 1; i <= lastPage; i++) {
                 String categoryPageUrl = pageUrl + "/page/" + i;
                 Thread productCrawler = new Thread(
-                    new Laprap3DProductListCrawler(getContext(), categoryPageUrl, null));
+                    new Laprap3DProductListCrawler(getContext(), categoryPageUrl, category));
                 productCrawler.start();
                 productCrawler.join();
                 

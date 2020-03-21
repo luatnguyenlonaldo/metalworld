@@ -6,6 +6,7 @@
 package com.metalworld.listener;
 
 import com.metalworld.categories_mapping.CategoryMappings;
+import com.metalworld.config.crawler.CrawlerConfig;
 import com.metalworld.config.product.ProductEstimation;
 import com.metalworld.crawler.artpuzzle.ArtPuzzleThread;
 import com.metalworld.crawler.laprap3d.Laprap3DThread;
@@ -41,11 +42,17 @@ public class MetalWorldContextListener implements ServletContextListener {
         context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
         DifficultMappings difficultMappings = getDifficultMappings(realPath);
         context.setAttribute("DIFFICULT_MAPPINGS", difficultMappings);
+        
+        CrawlerConfig crawlerConfig = CrawlerConfig.getCrawlerConfig(realPath);
+        if (!crawlerConfig.isEnableCrawler()) {
+            System.out.println("INFO Crawler has been disabled.");
+            return;
+        }
 
         artpuzzleThread = new ArtPuzzleThread(context);
         artpuzzleThread.start();
-//        laprap3dThread = new Laprap3DThread(context);
-//        laprap3dThread.start();
+        laprap3dThread = new Laprap3DThread(context);
+        laprap3dThread.start();
     }
 
     @Override

@@ -37,8 +37,8 @@ import javax.xml.bind.annotation.XmlType;
 @Table(name = "Product", catalog = "MetalWorld", schema = "dbo")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Product", propOrder = {
-    "ProductId",
-    "ProductName",
+    "productId",
+    "productName",
     "numOfSheets",
     "numOfParts",
     "difficulty",

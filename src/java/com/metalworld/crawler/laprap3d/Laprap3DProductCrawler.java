@@ -107,12 +107,13 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         System.out.println("Số tờ nèk: " + numOfSheets);
         Integer difficulty = getDifficulty(eventReader);
         System.out.println("Độ khó nefk: " + difficulty);
+        System.out.println("Category nek: "  + category);
 //        Integer numOfParts = getNumOfParts(eventReader);
 //        System.out.println("Số mảnh nefk: " + numOfParts);
 //        
-//        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, null, 
-//                imageSrc, pageUrl, Boolean.FALSE, category);
-        return null;
+        Product product = new Product(price, name, numOfSheets, 0, difficulty, 
+                price, null, imageSrc, pageUrl, Boolean.FALSE, category);
+        return product;
     }
 
     private String getProductName(XMLEventReader eventReader) {

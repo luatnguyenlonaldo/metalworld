@@ -73,7 +73,7 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
             transaction.begin();
 
             List<Product> models = em.createNamedQuery("Product.findByName")
-                    .setParameter("name", "%" + name + "%")
+                    .setParameter("productName", "%" + name + "%")
                     .getResultList();
 
             transaction.commit();
