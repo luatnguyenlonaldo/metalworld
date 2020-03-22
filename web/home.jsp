@@ -10,6 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Welcome to Metal World</title>
+        <link rel="shortcut icon" href="img/icon.ico" />
         <link href="css/spectre.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/spectre-exp.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/spectre-icons.min.css" rel="stylesheet" type="text/css"/>

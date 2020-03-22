@@ -62,8 +62,10 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
             }
             document = TextUtils.refineHtml(document);
             int lastPage = getLastPage(document);
-
-            for (int i = 1; i <= 3; i++) {
+            System.out.println("===== PAGE nefk: " + lastPage);
+            
+            for (int i = 1; i <= lastPage; i++) {
+                
                 String categoryPageUrl = pageUrl + "/page/" + i;
                 Thread productCrawler = new Thread(
                     new ArtPuzzleProductListCrawler(getContext(), categoryPageUrl, category));

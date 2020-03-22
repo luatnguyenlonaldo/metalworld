@@ -50,7 +50,7 @@ public class ArtPuzzleCategoryCrawler extends BaseCrawler {
         String document = "";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            if (isStart && line.contains("<li id=\"menu-item-904\"")) {
+            if (isStart && line.contains("<li id=\"menu-item-343\"")) {
                 break;
             }
             if (!isStart && line.contains("<li id=\"menu-item-342\"")) {

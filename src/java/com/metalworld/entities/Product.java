@@ -252,7 +252,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.metalworld.entities.Product[ prodictId=" + productId + " ]";
+        return "com.metalworld.entities.Product[ productId=" + productId + " ]";
     }
 
     public Double getEstimateTime() {

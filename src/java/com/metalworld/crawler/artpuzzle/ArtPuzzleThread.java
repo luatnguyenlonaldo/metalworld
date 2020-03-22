@@ -39,11 +39,14 @@ public class ArtPuzzleThread extends BaseThread implements Runnable {
                 System.out.println("link: " + key);
                 System.out.println("category: " + value);
             }
-            
+
 //                System.out.println("in nek:");
             for (Map.Entry<String, String> entry : categories.entrySet()) {
+//                if (entry.getValue().equals("Disney – Đô Rê Mon")) {
                 Thread pageCrawlingThread = new Thread(new ArtPuzzlePageCrawler(context, entry.getKey(), entry.getValue()));
                 pageCrawlingThread.start();
+//                }
+
             }
 
 //                Thread categoryCrawler = new Thread(new ArtPuzzlePageCrawler(URL, context));

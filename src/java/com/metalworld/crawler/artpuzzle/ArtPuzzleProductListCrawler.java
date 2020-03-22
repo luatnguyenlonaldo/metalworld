@@ -100,8 +100,8 @@ public class ArtPuzzleProductListCrawler extends BaseCrawler implements Runnable
         return document;
     }
     
-    private List<String> getProductLinks(String ducument) throws XMLStreamException, UnsupportedEncodingException {
-        XMLEventReader eventReader = parseStringToXMLEventReader(ducument);
+    private List<String> getProductLinks(String document) throws XMLStreamException, UnsupportedEncodingException {
+        XMLEventReader eventReader = parseStringToXMLEventReader(document);
         XMLEvent event = null;
         List<String> links = new ArrayList<>();
         while(eventReader.hasNext()) {
@@ -116,6 +116,7 @@ public class ArtPuzzleProductListCrawler extends BaseCrawler implements Runnable
                 }
             }
         }
+        System.out.println("===== COUNT: " + links.size());
         return links;
     }
     

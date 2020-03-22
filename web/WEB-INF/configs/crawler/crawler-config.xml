@@ -10,5 +10,5 @@ and open the template in the editor.
     xmlns:xsi="http://www.w3.org/2001/XMLSchema"
     xmlns='http://www.guitarpark.com/schema/crawler-config'
     xsi:schemaLocation='http://www.guitarpark.com/schema/crawler-config crawler-config.xsd'>
-    <enableCrawler>false</enableCrawler>
+    <enableCrawler>true</enableCrawler>
 </configs>
