@@ -20,6 +20,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -48,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
     "difficultyEstimation",
     "defaultPartsPerSheet"
 })
+@XmlRootElement(name = "product-estimation")
 public class ProductEstimation {
 
     @XmlElement(name = "difficulty-estimation")
@@ -109,7 +111,7 @@ public class ProductEstimation {
     }
     
     private static final String PRODUCT_ESTIMATION_CONFIG_FILE = 
-            "WEB-INF\\configs\\model\\estimation-for-product.xml";
+            "WEB-INF\\configs\\product\\estimation-for-product.xml";
     
     public synchronized static ProductEstimation getModelEstimation(String realPath) {
         try {

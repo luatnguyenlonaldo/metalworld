@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-image">
                     <div class="hover14">
-                        <a href="/PaperPark/model.jsp?id={id}" target="_blank">
+                        <a href="/MetalWorld/product.jsp?id={id}" target="_blank">
                             <figure>
                                 <img src="{image-src}" class="img-responsive" alt="{name}" title="{name}" width="100%"/>    
                             </figure>
@@ -66,7 +66,7 @@
                     </xsl:if>
                 </div>
                 <div class="card-footer">
-                    <a href="/MetalWorld/model.jsp?id={id}" target="_blank">Xem chi tiết</a>
+                    <a href="/MetalWorld/product.jsp?id={id}" target="_blank">Xem chi tiết</a>
                 </div>
             </div>
         </div>

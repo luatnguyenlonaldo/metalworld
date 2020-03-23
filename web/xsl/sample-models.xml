@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><model-detail>
+    <main-model>
+        <id>111</id>
+        <name>main</name>
+        <num-of-sheets>1</num-of-sheets>
+        <num-of-parts>1</num-of-parts>
+        <difficulty>1</difficulty>
+        <format>pdo</format>
+        <image-src>tiki</image-src>
+        <link>shopee</link>
+        <has-instruction>true</has-instruction>
+    </main-model>
+    <model-list>
+        <model>
+            <id>0</id>
+            <name>hi</name>
+            <num-of-sheets>1</num-of-sheets>
+            <num-of-parts>1</num-of-parts>
+            <difficulty>1</difficulty>
+            <format>pdf</format>
+            <image-src>google</image-src>
+            <link>facebook</link>
+            <has-instruction>true</has-instruction>
+        </model>
+        <model>
+            <id>1</id>
+            <name>ha</name>
+            <num-of-sheets>1</num-of-sheets>
+            <num-of-parts>1</num-of-parts>
+            <difficulty>1</difficulty>
+            <format>img</format>
+            <image-src>amazon</image-src>
+            <link>github</link>
+            <has-instruction>true</has-instruction>
+        </model>
+    </model-list>
+</model-detail>

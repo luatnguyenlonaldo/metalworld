@@ -48,6 +48,7 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
         Category category = createCategory(categoryName);
 //        System.out.println(categoryName);
         if (category == null) {
+            System.out.println("**** TỤI NÓ NULL NÈ: " + categoryName);
             Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, new Exception("Error: Category null"));
             return;
         }

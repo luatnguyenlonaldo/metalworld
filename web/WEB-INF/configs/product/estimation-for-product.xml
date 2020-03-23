@@ -6,10 +6,10 @@ and open the template in the editor.
 -->
 
 
-<model-estimation
+<product-estimation
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-    xmlns='http://www.guitarpark.com/schema/estimation-for-model'
-    xsi:schemaLocation='http://www.guitarpark.com/schema/estimation-for-model estimation-for-model.xsd'>
+    xmlns='http://www.guitarpark.com/schema/estimation-for-product'
+    xsi:schemaLocation='http://www.guitarpark.com/schema/estimation-for-product estimation-for-product.xsd'>
     <difficulty-estimation>
         <max-parts-per-sheet>1</max-parts-per-sheet>
         <max-number-of-sheets>1</max-number-of-sheets>
@@ -71,4 +71,4 @@ and open the template in the editor.
     </difficulty-estimation>
     
     <default-parts-per-sheet>8.4</default-parts-per-sheet>
-</model-estimation>
+</product-estimation>

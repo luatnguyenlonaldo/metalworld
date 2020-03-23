@@ -19,13 +19,13 @@
         
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
         <script src="js/home.js" type="text/javascript"></script>
-        <script src="js/model-detail.js" type="text/javascript"></script>
+        <script src="js/product-detail.js" type="text/javascript"></script>
         <title>Product Detail</title>
     </head>
     <body>
         <div class="app-logo">
             <a href="http://localhost:8084/MetalWorld/">
-                <img src="img/logo.jpg" alt="MetalWorld" width="400" title="MetalWorld"/>
+                <img src="img/icon-metalworld.png" alt="MetalWorld" width="400" title="MetalWorld"/>
             </a>
         </div>
         <h2 class="heading-title">Chọn mẫu mô hình giấy của bạn</h2>

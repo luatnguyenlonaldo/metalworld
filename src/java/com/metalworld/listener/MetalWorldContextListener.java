@@ -5,6 +5,7 @@
  */
 package com.metalworld.listener;
 
+import com.metalworld.categories_mapping.CategoryMapping;
 import com.metalworld.categories_mapping.CategoryMappings;
 import com.metalworld.config.crawler.CrawlerConfig;
 import com.metalworld.config.product.ProductEstimation;
@@ -38,6 +39,10 @@ public class MetalWorldContextListener implements ServletContextListener {
         realPath = context.getRealPath("/");
         CategoryMappings categoryMappings = getCategoryMappings(realPath);
         context.setAttribute("CATEGORY_MAPPINGS", categoryMappings);
+        
+        for (CategoryMapping categoryMapping : categoryMappings.getCategoryMapping()) {
+//            System.out.println("--- LOZZZ: " + categoryMapping.getName());
+        }
         ProductEstimation productEstimation = getProductEstimationConfig(realPath);
         context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
         DifficultMappings difficultMappings = getDifficultMappings(realPath);

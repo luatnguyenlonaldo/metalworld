@@ -5,5 +5,5 @@
 // Generated on: 2020.03.12 at 10:29:54 PM ICT 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://xml.netbeans.org/schema/estimation-for-model", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.guitarpark.com/schema/estimation-for-product", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.metalworld.config.product;

@@ -7,10 +7,10 @@ and open the template in the editor.
 
 <xs:schema version="1.0"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.guitarpark.com/schema/estimation-for-model"
-           targetNamespace="http://www.guitarpark.com/schema/estimation-for-model"
+           xmlns="http://www.guitarpark.com/schema/estimation-for-product"
+           targetNamespace="http://www.guitarpark.com/schema/estimation-for-product"
            elementFormDefault="qualified">
-    <xs:element name="model-estimation" type="ProductEstimation"/>
+    <xs:element name="product-estimation" type="ProductEstimation"/>
     <xs:complexType name="ProductEstimation">
         <xs:sequence>
             <xs:element name="difficulty-estimation" type="DifficultyEstimation" minOccurs="0" maxOccurs="unbounded"/>

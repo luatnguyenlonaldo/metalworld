@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ModelEstimation_QNAME = new QName("http://www.guitarpark.com/schema/estimation-for-model", "model-estimation");
+    private final static QName _ModelEstimation_QNAME = new QName("http://www.guitarpark.com/schema/estimation-for-product", "product-estimation");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.metalworld.config.product
@@ -60,7 +60,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link ProductEstimation }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.guitarpark.com/schema/estimation-for-model", name = "model-estimation")
+    @XmlElementDecl(namespace = "http://www.guitarpark.com/schema/estimation-for-product", name = "product-estimation")
     public JAXBElement<ProductEstimation> createModelEstimation(ProductEstimation value) {
         return new JAXBElement<ProductEstimation>(_ModelEstimation_QNAME, ProductEstimation.class, null, value);
     }

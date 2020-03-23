@@ -7,6 +7,7 @@ package com.metalworld.crawler.artpuzzle;
 
 import com.metalworld.crawler.BaseCrawler;
 import com.metalworld.utils.ElementChecker;
+import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,7 +51,7 @@ public class ArtPuzzleCategoryCrawler extends BaseCrawler {
         String document = "";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            if (isStart && line.contains("<li id=\"menu-item-343\"")) {
+            if (isStart && line.contains("<li id=\"menu-item-904\"")) {
                 break;
             }
             if (!isStart && line.contains("<li id=\"menu-item-342\"")) {
@@ -62,18 +63,19 @@ public class ArtPuzzleCategoryCrawler extends BaseCrawler {
         }
         return document;
     }
-    
+
     public Map<String, String> stAXParserForCategories(String document) throws XMLStreamException, UnsupportedEncodingException {
         document = document.trim();
 //        System.out.println(document);
+//        document = TextUtils.refineHtml(document);
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
         Map<String, String> categories = new HashMap<>();
-        
-        while(eventReader.hasNext()) {
+
+        while (eventReader.hasNext()) {
             XMLEvent event = (XMLEvent) eventReader.next();
             if (event.isStartElement()) {
                 StartElement startElement = event.asStartElement();
-                if(ElementChecker.isElementWith(startElement, "a")) {
+                if (ElementChecker.isElementWith(startElement, "a")) {
                     Attribute href = startElement.getAttributeByName(new QName("href"));
                     String link = href.getValue();
                     for (int i = 0; i < 3; i++) {
