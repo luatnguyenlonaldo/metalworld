@@ -111,8 +111,8 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         Integer numOfParts = getNumOfParts(eventReader);
         System.out.println("Số mảnh nefk: " + numOfParts);
 
-        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, price, null,
-                imageSrc, pageUrl, Boolean.FALSE, category);
+        Product product = new Product(0, name, numOfSheets, numOfParts, difficulty, price,
+                imageSrc, pageUrl, category);
         return product;
     }
 

@@ -98,7 +98,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="section-search-result">
             <div id="div-loading" class="loading loading-lg" style="display: none"></div>
             <div id="search-result" style="display: none">

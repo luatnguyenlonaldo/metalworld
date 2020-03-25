@@ -112,7 +112,7 @@ public class Laprap3DProductCrawler extends BaseCrawler {
 //        System.out.println("Số mảnh nefk: " + numOfParts);
 //        
         Product product = new Product(price, name, numOfSheets, 0, difficulty, 
-                price, null, imageSrc, pageUrl, Boolean.FALSE, category);
+                price, imageSrc, pageUrl, category);
         return product;
     }
 

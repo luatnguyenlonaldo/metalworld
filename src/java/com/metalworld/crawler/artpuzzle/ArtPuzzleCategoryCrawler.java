@@ -48,10 +48,10 @@ public class ArtPuzzleCategoryCrawler extends BaseCrawler {
 
     private String getCategoryDocument(final BufferedReader reader) throws IOException {
         String line = "";
-        String document = "";
+        String document = "<categoryLink>";
         boolean isStart = false;
         while ((line = reader.readLine()) != null) {
-            if (isStart && line.contains("<li id=\"menu-item-904\"")) {
+            if (isStart && line.contains("<li id=\"menu-item-343\"")) {
                 break;
             }
             if (!isStart && line.contains("<li id=\"menu-item-342\"")) {
@@ -61,12 +61,13 @@ public class ArtPuzzleCategoryCrawler extends BaseCrawler {
                 document += line.trim();
             }
         }
+        document += "</categoryLink>";
         return document;
     }
 
     public Map<String, String> stAXParserForCategories(String document) throws XMLStreamException, UnsupportedEncodingException {
         document = document.trim();
-//        System.out.println(document);
+//        System.out.println("===== DOC NE AE: " + document);
 //        document = TextUtils.refineHtml(document);
         XMLEventReader eventReader = parseStringToXMLEventReader(document);
         Map<String, String> categories = new HashMap<>();

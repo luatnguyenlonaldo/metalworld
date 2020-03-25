@@ -40,9 +40,9 @@ public class MetalWorldContextListener implements ServletContextListener {
         CategoryMappings categoryMappings = getCategoryMappings(realPath);
         context.setAttribute("CATEGORY_MAPPINGS", categoryMappings);
         
-        for (CategoryMapping categoryMapping : categoryMappings.getCategoryMapping()) {
+//        for (CategoryMapping categoryMapping : categoryMappings.getCategoryMapping()) {
 //            System.out.println("--- LOZZZ: " + categoryMapping.getName());
-        }
+//        }
         ProductEstimation productEstimation = getProductEstimationConfig(realPath);
         context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
         DifficultMappings difficultMappings = getDifficultMappings(realPath);

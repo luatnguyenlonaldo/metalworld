@@ -50,7 +50,7 @@ and open the template in the editor.
     </categoryMapping>
     <categoryMapping>
         <name>Động - Thực Vật</name>
-        <mapping>Côn Trùng - Động Vật</mapping>
+        <mapping>Côn Trùng – Động Vật</mapping>
         <mapping>Khủng Long – Rồng</mapping>
         <mapping>Động vật</mapping>
         <mapping>Hoa Cỏ</mapping>
@@ -72,7 +72,7 @@ and open the template in the editor.
     <categoryMapping>
         <name>Tàu thuyền</name>
         <mapping>Tàu Chiến</mapping>
-        <mapping>Tàu Thủy - Thuyền Buồm</mapping>
+        <mapping>Tàu Thủy – Thuyền Buồm</mapping>
         <mapping>Tàu chiến</mapping>
     </categoryMapping>
     <categoryMapping>
@@ -102,8 +102,8 @@ and open the template in the editor.
         <mapping>Dụng cụ lắp ráp</mapping>
     </categoryMapping>
     <categoryMapping>
-        <name>Đế Xoay - Đèn Led</name>
-        <mapping>Đế Xoay - Đèn Led</mapping>
+        <name>Đế Xoay – Đèn Led</name>
+        <mapping>Đế Xoay – Đèn Led</mapping>
     </categoryMapping>
     <categoryMapping>
         <name>Hộp Mica</name>

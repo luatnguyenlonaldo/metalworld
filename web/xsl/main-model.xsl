@@ -91,8 +91,15 @@
                         <a href="{link}" target="_blank" class="btn btn-lg btn-primary">Tải xuống</a>
                     </div>
                 </div>
+                <div class="contribute">
+                    <font color="red">* Đóng góp: </font>
+                    <a class="" href="#popup1">
+                        <i>Bạn đã hoàn thành mẫu này mất bao lâu nhỉ?</i>
+                    </a>
+                </div>
             </div>
         </div>
+        
     </xsl:template>
 
 </xsl:stylesheet>
