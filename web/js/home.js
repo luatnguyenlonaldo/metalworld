@@ -19,6 +19,18 @@ function searchModels() {
     startSearching(url + '?' + params);
 }
 
+function suggestModels() {
+    let skillLevel = document.getElementById("selectSkillLevel").value;
+    let difficulty = document.getElementById("selectDifficulty").value;
+    let makeTime = document.getElementById("makeTimeTotalHours").value;
+
+    let url = 'suggestModel';
+    let params = 'skillLevel=' + skillLevel + '&difficulty=' + difficulty
+            + '&totalHours=' + makeTime;
+
+    startSearching(url + '?' + params);
+}
+
 function startSearching(url) {
     showLoadingAnimation();
     hideSearchResult();

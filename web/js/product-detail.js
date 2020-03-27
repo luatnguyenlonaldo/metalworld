@@ -78,3 +78,31 @@ function showEmptyModelState() {
     let div = document.getElementById('model-not-found');
     div.style.display = 'block';
 }
+
+function contributionInfor() {
+    let email = document.getElementById('email').value;
+    let completionTime = document.getElementById('completionTime').value;
+    console.log(completionTime);
+
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('id');
+
+    let url = 'contributeProduct?email=' + email + "&completionTime=" + completionTime + "&idProduct=" + id;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.overrideMimeType('application/xml');
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var hiddenPopup = document.getElementById("popup1");
+            
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function () {
+                x.className = x.className.replace("show", "");
+            }, 3000);
+        }
+    };
+    xhr.send(null);
+}

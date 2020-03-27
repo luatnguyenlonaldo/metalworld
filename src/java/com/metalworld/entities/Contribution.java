@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,6 +36,7 @@ public class Contribution implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
     private Integer id;
     @Column(name = "Email", length = 100)
@@ -46,6 +49,13 @@ public class Contribution implements Serializable {
     private Product productId;
 
     public Contribution() {
+    }
+
+    public Contribution(Integer id, String email, Double completionTime, Product productId) {
+        this.id = id;
+        this.email = email;
+        this.completionTime = completionTime;
+        this.productId = productId;
     }
 
     public Contribution(Integer id) {

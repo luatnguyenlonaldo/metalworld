@@ -54,28 +54,30 @@
             <div class="popup">
                 <h2>Đóng góp</h2>
                 <a class="close" href="#">&times;</a>
+                <hr/>
                 <div class="content">
                     <table border="0">
                         <tbody>
                             <tr>
                                 <td>Email:</td>
-                                <td><input type="text" id="email" placeholder="Email của bạn là..."/></td>
+                                <td><input style="width: 300px;" type="text" id="email" placeholder="Email của bạn là..."/></td>
                             </tr>
                             <tr>
                                 <td>Thời gian hoàn thành: </td>
                                 <td>
-                                    <input type="number" class="form-input text-right" min="0" step="0.1"
+                                    <input style="width: 300px;" type="number" class="form-input text-right" min="0" step="0.1"
                                            id="completionTime" onchange="handleTimePickerChangeTotalHours()"
                                            value="0"/>
-                                    <!--<span class="input-group-addon addon-custom">tiếng</span>-->
                                 </td>
                                 <td>tiếng</td>
                             </tr>
                         </tbody>
                     </table>
-                    <button class="btn btn-primary" onclick="contributionInfor()">Gửi</button>
+                    <hr/>
+                    <button class="btn btn-primary" style="float: right; width: 100px;" onclick="contributionInfor()">Gửi</button>
                 </div>
             </div>
         </div>
+        <div id="snackbar">Thanks for your support !!!</div>
     </body>
 </html>

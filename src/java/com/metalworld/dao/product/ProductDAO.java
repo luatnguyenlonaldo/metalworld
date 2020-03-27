@@ -96,7 +96,7 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
             transaction.begin();
 
             Product model = em.createNamedQuery("Product.findById", Product.class)
-                    .setParameter("id", id)
+                    .setParameter("productId", id)
                     .getSingleResult();
 
             transaction.commit();
@@ -303,7 +303,7 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
      * @param skillLevel
      */
     private void estimateModelsMakingTime(ServletContext context, List<Product> models, int skillLevel) {
-        ProductEstimation estimation = (ProductEstimation) context.getAttribute("MODEL_ESTIMATION");
+        ProductEstimation estimation = (ProductEstimation) context.getAttribute("PRODUCT_ESTIMATION");
         if (estimation == null) {
 //            estimation = ProductEstimation.getProductEstimation(context.getRealPath("/"));
             context.setAttribute("MODEL_ESTIMATION", estimation);
