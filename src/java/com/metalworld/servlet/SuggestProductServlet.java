@@ -5,7 +5,10 @@
  */
 package com.metalworld.servlet;
 
+import com.metalworld.config.coefficient.Coefficient;
+import com.metalworld.dao.contribution.ContributionDAO;
 import com.metalworld.dao.product.ProductDAO;
+import com.metalworld.entities.Contribution;
 import com.metalworld.entities.Product;
 import com.metalworld.products.ProductList;
 import com.metalworld.utils.JAXBUtils;
@@ -52,18 +55,26 @@ public class SuggestProductServlet extends HttpServlet {
             int difficulty = Integer.parseInt(difficultyStr);
             double totalHours = Double.parseDouble(totalHoursStr);
 
-            ProductDAO modelDAO = ProductDAO.getInstance();
+            ProductDAO productDAO = ProductDAO.getInstance();
+            ContributionDAO contributionDAO = ContributionDAO.getInstance();
+            
+            List<Contribution> contributions = contributionDAO.getAllContribution();
             
             HttpSession session = request.getSession();
-            List<Product> models = modelDAO.getAllModels(session, skillLevel);
+            List<Product> products = productDAO.getAllProducts(session, difficulty);
+            
+            Coefficient coe = getCoefficient(getServletContext().getRealPath("/"));
+            double skill_Coefficient = Double.parseDouble(coe.getSkillCoefficient());
+            double difficult_Coefficient = Double.parseDouble(coe.getDifficultCoefficient());
+            double free_Coefficient = Double.parseDouble(coe.getFreeCoefficient());
 
             List<Product> foundModels = new ArrayList<>();
-            models.forEach((model) -> {
-                if ((model.getDifficulty() + 1) / 2 == difficulty
-                        && model.getEstimateTime() <= totalHours) {
-                    foundModels.add(model);
+            for (Product product : products) {
+                if ((free_Coefficient + skill_Coefficient * skillLevel + 
+                        difficult_Coefficient * product.getDifficulty()) <= totalHours) {
+                    foundModels.add(product);
                 }
-            });
+            }
 
             ProductList resultModels = new ProductList();
             resultModels.setModelList(foundModels);
@@ -116,4 +127,7 @@ public class SuggestProductServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private Coefficient getCoefficient(String realPath) {
+        return Coefficient.getCoefficient(realPath);
+    }
 }

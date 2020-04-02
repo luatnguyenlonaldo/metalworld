@@ -10,6 +10,7 @@ import com.metalworld.dao.category.CategoryDAO;
 import com.metalworld.entities.Contribution;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.DBUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,5 +69,27 @@ public class ContributionDAO extends BaseDAO<Contribution, Integer>{
             }
         }
         return null;
+    }
+    
+    public List<Contribution> getAllContribution() {
+        EntityManager em = DBUtils.getEntityManager();
+        try {
+            EntityTransaction transaction = em.getTransaction();
+            transaction.begin();
+            List<Contribution> contributions = em.createNamedQuery("Contribution.findAll").getResultList();
+            transaction.commit();
+            
+            if (contributions == null) {
+                contributions = new ArrayList<>();
+            }
+            return contributions;
+        } catch (Exception e) {
+            Logger.getLogger(ContributionDAO.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return new ArrayList<>();
     }
 }

@@ -268,6 +268,48 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
 
         return models;
     }
+    
+    /**
+     *
+     * @param session
+     * @param difficult
+     * @return
+     */
+    public List<Product> getAllProducts(HttpSession session, int difficulty) {
+        List<Product> models = (List<Product>) session.getAttribute("MODELS");
+        Long cacheTime = (Long) session.getAttribute("CACHE_TIME");
+
+        long now = System.currentTimeMillis();
+
+        List<Product> products = new ArrayList<>();
+
+        if (models == null || cacheTime == null
+                || (now - cacheTime > ConfigConstants.CACHE_MODELS_TIMEOUT)) {
+            models = getAllModels(session.getServletContext());
+            for (Product model : models) {
+                if ((model.getDifficulty() + 1) / 2 == difficulty) {
+                    products.add(model);
+                }
+            }
+            session.setAttribute("MODELS", products);
+            session.setAttribute("DIFFICULTY", difficulty);
+            session.setAttribute("CACHE_TIME", now);
+            return products;
+        }
+        Integer cachedDifficulty = (Integer) session.getAttribute("DIFFICULTY");
+        if (cachedDifficulty == null || cachedDifficulty != difficulty) {
+            for (Product model : models) {
+                if ((model.getDifficulty() + 1) / 2 == difficulty) {
+                    products.add(model);
+                }
+            }
+            session.setAttribute("MODELS", models);
+            session.setAttribute("DIFFICULTY", difficulty);
+            session.setAttribute("CACHE_TIME", now);
+            return products;
+        }
+        return models;
+    }
 
     /**
      * get cached models from application scope

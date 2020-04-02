@@ -63,6 +63,21 @@
                                 <td><input style="width: 300px;" type="text" id="email" placeholder="Email của bạn là..."/></td>
                             </tr>
                             <tr>
+                                <td>
+                                    <label class="form-label" for="selectSkillLevel">Cấp độ kỹ năng của bạn</label>
+                                </td>
+                                <td>
+                                    <select class="form-select" id="skillLevelContribution" 
+                                            onchange="handleChangeLevel(this)">
+                                        <option value="1">Mới bắt đầu</option>
+                                        <option value="2">Tàm tạm</option>
+                                        <option value="3">Quen thuộc</option>
+                                        <option value="4">Thành thạo</option>
+                                        <option value="5">Chuyên gia</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Thời gian hoàn thành: </td>
                                 <td>
                                     <input style="width: 300px;" type="number" class="form-input text-right" min="0" step="0.1"

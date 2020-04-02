@@ -132,6 +132,7 @@ function applyXslToResultModels(resultModels, xsl) {
     let pageSize = 18;
     xsltProcessor.setParameter(null, 'pageSize', pageSize);
     
+    console.log(resultModels);
     let resultHtml = xsltProcessor.transformToFragment(resultModels, document);
 
     let countModels = resultModels.getElementsByTagName('product-list')[0].childElementCount;

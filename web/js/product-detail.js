@@ -82,13 +82,14 @@ function showEmptyModelState() {
 function contributionInfor() {
     let email = document.getElementById('email').value;
     let completionTime = document.getElementById('completionTime').value;
-    console.log(completionTime);
+    let selectSkillLevel = document.getElementById('skillLevelContribution').value;
+    console.log(selectSkillLevel);
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id');
 
-    let url = 'contributeProduct?email=' + email + "&completionTime=" + completionTime + "&idProduct=" + id;
+    let url = 'contributeProduct?email=' + email + "&completionTime=" + completionTime + "&selectSkillLevel=" + selectSkillLevel + "&idProduct=" + id;
 
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);

@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Contribution.findAll", query = "SELECT c FROM Contribution c")
     , @NamedQuery(name = "Contribution.findById", query = "SELECT c FROM Contribution c WHERE c.id = :id")
     , @NamedQuery(name = "Contribution.findByEmail", query = "SELECT c FROM Contribution c WHERE c.email = :email")
+    , @NamedQuery(name = "Contribution.findBySkillLevel", query = "SELECT c FROM Contribution c WHERE c.skillLevel = :skillLevel") 
     , @NamedQuery(name = "Contribution.findByCompletionTime", query = "SELECT c FROM Contribution c WHERE c.completionTime = :completionTime")})
 public class Contribution implements Serializable {
 
@@ -41,6 +42,8 @@ public class Contribution implements Serializable {
     private Integer id;
     @Column(name = "Email", length = 100)
     private String email;
+    @Column(name = "SkillLevel")
+    private Integer skillLevel;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "CompletionTime", precision = 53)
     private Double completionTime;
@@ -51,10 +54,11 @@ public class Contribution implements Serializable {
     public Contribution() {
     }
 
-    public Contribution(Integer id, String email, Double completionTime, Product productId) {
+    public Contribution(Integer id, String email, Double completionTime, Integer skillLevel, Product productId) {
         this.id = id;
         this.email = email;
         this.completionTime = completionTime;
+        this.skillLevel = skillLevel;
         this.productId = productId;
     }
 
@@ -117,6 +121,14 @@ public class Contribution implements Serializable {
     @Override
     public String toString() {
         return "com.metalworld.entities.Contribution[ id=" + id + " ]";
+    }
+
+    public Integer getSkillLevel() {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(Integer skillLevel) {
+        this.skillLevel = skillLevel;
     }
     
 }
