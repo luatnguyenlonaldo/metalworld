@@ -41,29 +41,18 @@ public class SearchProductServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         String modelName = request.getParameter("modelName");
-        
+
         try (PrintWriter out = response.getWriter()) {
             ProductDAO productDAO = ProductDAO.getInstance();
-            HttpSession session = request.getSession();
-            Integer skillLevel = (Integer) session.getAttribute("SKILL_LEVEL");
-            
             List<Product> products;
-            if (skillLevel != null) {
-                List<Product> allProducts = productDAO.getAllModels(session, skillLevel);
-                products = new ArrayList<>();
-                allProducts.stream().filter((product) -> (product.getProductName().toLowerCase().contains(modelName.toLowerCase()))).forEachOrdered((product) -> {
-                    products.add(product);
-                });
-            } else {
-                products = productDAO.getModelsByName(modelName);
-            }
+            products = productDAO.getModelsByName(modelName);
             ProductList resultProducts = new ProductList();
             resultProducts.setModelList(products);
-            
+
             String resultProductsXml = JAXBUtils.marshall(resultProducts, resultProducts.getClass());
-            
+
             out.write(resultProductsXml);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {

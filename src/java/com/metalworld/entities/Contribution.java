@@ -27,11 +27,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "Contribution", catalog = "MetalWorld", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Contribution.findAll", query = "SELECT c FROM Contribution c")
+    @NamedQuery(name = "Contribution.findAll", query = "SELECT c FROM Contribution c WHERE c.isAgreed = :condition")
     , @NamedQuery(name = "Contribution.findById", query = "SELECT c FROM Contribution c WHERE c.id = :id")
     , @NamedQuery(name = "Contribution.findByEmail", query = "SELECT c FROM Contribution c WHERE c.email = :email")
     , @NamedQuery(name = "Contribution.findBySkillLevel", query = "SELECT c FROM Contribution c WHERE c.skillLevel = :skillLevel") 
-    , @NamedQuery(name = "Contribution.findByCompletionTime", query = "SELECT c FROM Contribution c WHERE c.completionTime = :completionTime")})
+    , @NamedQuery(name = "Contribution.findByCompletionTime", query = "SELECT c FROM Contribution c WHERE c.completionTime = :completionTime")
+    , @NamedQuery(name = "Contribution.findIsAgreed", query = "SELECT c FROM Contribution c WHERE c.isAgreed = :isAgreed")})
 public class Contribution implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,22 +45,24 @@ public class Contribution implements Serializable {
     private String email;
     @Column(name = "SkillLevel")
     private Integer skillLevel;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "CompletionTime", precision = 53)
     private Double completionTime;
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
     @ManyToOne
     private Product productId;
+    @Column(name = "IsAgreed")
+    private Boolean isAgreed;
 
     public Contribution() {
     }
 
-    public Contribution(Integer id, String email, Double completionTime, Integer skillLevel, Product productId) {
+    public Contribution(Integer id, String email, Double completionTime, Integer skillLevel, Product productId, boolean isAgreed) {
         this.id = id;
         this.email = email;
         this.completionTime = completionTime;
         this.skillLevel = skillLevel;
         this.productId = productId;
+        this.isAgreed = isAgreed;
     }
 
     public Contribution(Integer id) {
@@ -88,6 +91,22 @@ public class Contribution implements Serializable {
 
     public void setCompletionTime(Double completionTime) {
         this.completionTime = completionTime;
+    }
+    
+    public Integer getSkillLevel() {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(Integer skillLevel) {
+        this.skillLevel = skillLevel;
+    }
+
+    public Boolean getIsAgreed() {
+        return isAgreed;
+    }
+
+    public void setIsAgreed(Boolean isAgreed) {
+        this.isAgreed = isAgreed;
     }
 
     public Product getProductId() {
@@ -122,13 +141,4 @@ public class Contribution implements Serializable {
     public String toString() {
         return "com.metalworld.entities.Contribution[ id=" + id + " ]";
     }
-
-    public Integer getSkillLevel() {
-        return skillLevel;
-    }
-
-    public void setSkillLevel(Integer skillLevel) {
-        this.skillLevel = skillLevel;
-    }
-    
 }

@@ -28,7 +28,7 @@
                 <img src="img/icon-metalworld.png" alt="MetalWorld" width="400" title="MetalWorld"/>
             </a>
         </div>
-        <h2 class="heading-title">Chọn mẫu mô hình giấy của bạn</h2>
+        <h2 class="heading-title">Chi tiết sản phẩm</h2>
 
         <div id="div-loading" class="loading loading-lg" style="display: none">
         </div>

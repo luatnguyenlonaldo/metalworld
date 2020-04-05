@@ -14,6 +14,7 @@
         <link href="css/spectre.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/spectre-exp.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/spectre-icons.min.css" rel="stylesheet" type="text/css"/>
+
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
         <script src="js/home.js" type="text/javascript"></script>
     </head>
@@ -24,50 +25,66 @@
             </a>
         </div>
 
-        <h2 class="heading-title">Chọn mẫu mô hình kim loại của bạn</h2>
-        <div class="container">
+        <h2 class="heading-title">Chọn mẫu mô hình kim loại</h2>
+        <div class="container" style="width: 70%">
             <div class="columns">
-                <div class="column" style="background-color: white; border-radius: 10px;">
-                    <h3 class="text-center">Gợi ý mô hình</h3>
+                <div class="column card-4" style="border-radius: 10px;">
+                    
+                    <form onsubmit="return false">
+                        <div class="form-group">
+                            <div>
+                                <input type="text" id="modelName" class="form-input" style="float: left; width: 85%"; 
+                                       placeholder="Nhập tên mô hình - Ví dụ: Thanos"/>
+                                <button style="width: 15%" class="btn btn-primary" onclick="searchModels()">Tìm mô hình</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br/>
+                    <div class="separator"> hoặc </div>
+                    <br/>
+
                     <form method="" onsubmit="return false">
-                        <div class="form-group">
-                            <label class="form-label" for="selectSkillLevel">Cấp độ kỹ năng của bạn</label>
-                            <select class="form-select bg-super-easy" id="selectSkillLevel" 
-                                    onchange="handleChangeLevel(this)">
-                                <option value="1" class="bg-super-easy">Mới bắt đầu</option>
-                                <option value="2" class="bg-easy">Tàm tạm</option>
-                                <option value="3" class="bg-normal">Quen thuộc</option>
-                                <option value="4" class="bg-hard">Thành thạo</option>
-                                <option value="5" class="bg-super-hard">Chuyên gia</option>
-                            </select>
-                        </div>
+                        <table class="table-model" border="0">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label class="form-labe text-label" for="selectSkillLevel" style="font-weight: bold">Kỹ năng</label>
+                                    </td>
+                                    <td>
+                                        <label class="form-label text-label" for="selectDifficulty" style="font-weight: bold">Độ khó</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <select class="form-select" id="selectSkillLevel" 
+                                                    onchange="handleChangeLevel(this)">
+                                                <option value="1">Mới bắt đầu</option>
+                                                <option value="2">Tàm tạm</option>
+                                                <option value="3">Quen thuộc</option>
+                                                <option value="4">Thành thạo</option>
+                                                <option value="5">Chuyên gia</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <select class="form-select" id="selectDifficulty" 
+                                                    onchange="handleChangeLevel(this)">
+                                                <option value="1">Cực dễ</option>
+                                                <option value="2">Dễ</option>
+                                                <option value="3">Trung bình</option>
+                                                <option value="4">Khó</option>
+                                                <option value="5">Cực khó</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         <div class="form-group">
-                            <label class="form-label" for="selectDifficulty">Bạn muốn chọn mô hình có độ khó</label>
-                            <select class="form-select bg-super-easy" id="selectDifficulty" 
-                                    onchange="handleChangeLevel(this)">
-                                <option value="1" class="bg-super-easy">Cực dễ</option>
-                                <option value="2" class="bg-easy">Dễ</option>
-                                <option value="3" class="bg-normal">Trung bình</option>
-                                <option value="4" class="bg-hard">Khó</option>
-                                <option value="5" class="bg-super-hard">Cực khó</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Thời gian bạn có để làm mô hình</label>
-                            <div class="input-group hide">
-                                <input type="number" class="form-input text-right" min="0"
-                                       id="makeTimeDay" onchange="handleTimePickerChangeDays()"
-                                       value="0"/>
-                                <span class="input-group-addon addon-custom">ngày</span>
-                            </div>
-                            <div class="input-group hide">
-                                <input type="number" class="form-input text-right" min="0" max="24" step="0.1"
-                                       id="makeTimeHoursPerDay" onchange="handleTimePickerChangeHoursPerDay()"
-                                       value="0"/>
-                                <span class="input-group-addon addon-custom">tiếng/ngày</span>
-                            </div>
+                            <label class="form-label text-label" style="font-weight: bold">Quỹ thời gian đầu tư cho mô hình</label>
                             <div class="input-group">
                                 <input type="number" class="form-input text-right" min="0" step="0.1"
                                        id="makeTimeTotalHours" onchange="handleTimePickerChangeTotalHours()"
@@ -76,23 +93,7 @@
                             </div>
                         </div>
                         <div class="form-group text-center">
-                            <button class="btn btn-primary" onclick="suggestModels()">Tìm mô hình</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="divider-vert" data-content="Hoặc"></div>
-
-                <div class="column" style="background-image: linear-gradient(to bottom right, #FFEFBA, #FFFFFF); border-style: outset; border-radius: 10px;">
-                    <h3 class="text-center">Tìm mô hình</h3>
-                    <form onsubmit="return false">
-                        <div class="form-group">
-                            <label class="form-label" for="modelName">Tên mô hình</label>
-                            <input type="text" id="modelName" class="form-input"
-                                   placeholder="Ví dụ: Thanos"/>
-                        </div>
-                        <div class="form-group text-center">
-                            <button class="btn btn-primary" onclick="searchModels()">Tìm mô hình</button>
+                            <button class="btn btn-primary" onclick="suggestModels()">Gợi ý mô hình</button>
                         </div>
                     </form>
                 </div>
@@ -105,7 +106,6 @@
 
             </div>
         </div>
-
         <div class="container" id="paginationContainer">
         </div>
     </body>

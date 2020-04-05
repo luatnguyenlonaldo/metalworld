@@ -5,9 +5,7 @@
  */
 package com.metalworld.entities;
 
-import com.metalworld.config.product.ProductEstimation;
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,14 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -40,13 +35,12 @@ import javax.xml.bind.annotation.XmlType;
     "productName",
     "numOfSheets",
     "numOfParts",
+    "size",
+    "color",
     "difficulty",
     "price",
-//    "format",
     "imageSrc",
     "link",
-//    "hasInstruction",
-    "estimateTime",
     "categoryId"
 })
 @XmlRootElement
@@ -56,12 +50,12 @@ import javax.xml.bind.annotation.XmlType;
     , @NamedQuery(name = "Product.findByName", query = "SELECT m FROM Product m WHERE m.productName LIKE :productName")
     , @NamedQuery(name = "Product.findByNumOfSheets", query = "SELECT m FROM Product m WHERE m.numOfSheets = :numOfSheets")
     , @NamedQuery(name = "Product.findByNumOfParts", query = "SELECT m FROM Product m WHERE m.numOfParts = :numOfParts")
+    , @NamedQuery(name = "Product.findBySize", query = "SELECT m FROM Product m WHERE m.size = :size")
+    , @NamedQuery(name = "Product.findByColor", query = "SELECT m FROM Product m WHERE m.color = :color")
     , @NamedQuery(name = "Product.findByDifficulty", query = "SELECT m FROM Product m WHERE m.difficulty = :difficulty")
-//    , @NamedQuery(name = "Product.findByFormat", query = "SELECT m FROM Product m WHERE m.format = :format")
+    , @NamedQuery(name = "Product.findByPrice", query = "SELECT m FROM Product m WHERE m.price = :price")
     , @NamedQuery(name = "Product.findByImageSrc", query = "SELECT m FROM Product m WHERE m.imageSrc = :imageSrc")
     , @NamedQuery(name = "Product.findByLink", query = "SELECT m FROM Product m WHERE m.link = :link")
-//    , @NamedQuery(name = "Product.findByHasInstruction",
-//            query = "SELECT m FROM Product m WHERE m.hasInstruction = :hasInstruction")
     , @NamedQuery(name = "Product.getCountModels", query = "SELECT count(m) FROM Product m")
 })
 public class Product implements Serializable {
@@ -85,18 +79,20 @@ public class Product implements Serializable {
     @Column(name = "NumOfParts")
     @XmlElement(name = "num-of-parts")
     private Integer numOfParts;
+    
+    @Column(name = "Size", length = 50)
+    private String size;
+    
+    @Column(name = "Color", length = 50)
+    private String color;
 
     @Column(name = "Difficulty")
     @XmlElement(name = "difficulty")
     private Integer difficulty;
     
     @Column(name = "Price")
-    @XmlElement(name = "id")
+    @XmlElement(name = "price")
     private Integer price;
-
-//    @Column(name = "Format", length = 10)
-//    @XmlElement(name = "format")
-//    private String format;
 
     @Column(name = "ImageSrc", length = 500)
     @XmlElement(name = "image-src")
@@ -106,17 +102,9 @@ public class Product implements Serializable {
     @XmlElement(name = "link")
     private String link;
 
-//    @Column(name = "HasInstruction")
-//    @XmlElement(name = "has-instruction")
-//    private Boolean hasInstruction;
-
     @JoinColumn(name = "CategoryId", referencedColumnName = "CategoryId")
     @ManyToOne
     private Category categoryId;
-
-    @Transient
-    @XmlElement(name = "estimate-time")
-    private Double estimateTime;
 
     public Product() {
     }
@@ -126,18 +114,18 @@ public class Product implements Serializable {
     }
 
     public Product(Integer productId, String productName, Integer numOfSheets, Integer numOfParts,
-            Integer difficulty, Integer price, String imageSrc, String link,
+            String size, String color, Integer difficulty, Integer price, String imageSrc, String link,
             Category categoryId) {
         this.productId = productId;
         this.productName = productName;
         this.numOfSheets = numOfSheets;
         this.numOfParts = numOfParts;
+        this.size = size;
+        this.color = color;
         this.difficulty = difficulty;
         this.price = price;
-//        this.format = format;
         this.imageSrc = imageSrc;
         this.link = link;
-//        this.hasInstruction = hasInstruction;
         this.categoryId = categoryId;
     }
 
@@ -172,6 +160,22 @@ public class Product implements Serializable {
     public void setNumOfParts(Integer numOfParts) {
         this.numOfParts = numOfParts;
     }
+    
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 
     public Integer getDifficulty() {
         return difficulty;
@@ -189,14 +193,6 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-//    public String getFormat() {
-//        return format;
-//    }
-//
-//    public void setFormat(String format) {
-//        this.format = format;
-//    }
-
     public String getImageSrc() {
         return imageSrc;
     }
@@ -213,14 +209,6 @@ public class Product implements Serializable {
         this.link = link;
     }
 
-//    public Boolean getHasInstruction() {
-//        return hasInstruction;
-//    }
-//
-//    public void setHasInstruction(Boolean hasInstruction) {
-//        this.hasInstruction = hasInstruction;
-//    }
-//
     public Category getCategoryId() {
         return categoryId;
     }
@@ -238,7 +226,6 @@ public class Product implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Product)) {
             return false;
         }
@@ -254,38 +241,6 @@ public class Product implements Serializable {
         return "com.metalworld.entities.Product[ productId=" + productId + " ]";
     }
 
-    public Double getEstimateTime() {
-        return estimateTime;
-    }
-
-    public void setEstimateTime(Double estimateTime) {
-        this.estimateTime = estimateTime;
-    }
-
-    public void estimateMakingTime(ProductEstimation estimation, int skillLevel) {
-        double standardPartsPerSheet = estimation.getDefaultPartsPerSheet().doubleValue();
-
-        double partsPerSheet = standardPartsPerSheet;
-
-        if (numOfSheets != null && numOfSheets > 0 && numOfParts != null && numOfParts > 0) {
-            partsPerSheet = 1.0 * numOfParts / numOfSheets;
-        }
-
-        this.estimateTime = getEstimateMakingTime(skillLevel, difficulty,
-                partsPerSheet, standardPartsPerSheet, numOfSheets);
-    }
-
-    private Double getEstimateMakingTime(int skillLevel, int difficulty,
-            double partsPerSheet, double standardPartsPerSheet, int numOfSheets) {
-
-        Double hoursPerSheet = 0.75 * (difficulty / (0.625 * skillLevel + 1.875))
-                * (partsPerSheet / standardPartsPerSheet);
-
-        Double totalTime = hoursPerSheet * numOfSheets;
-
-        return totalTime;
-    }
-
     public void copyValueOf(Product model) {
         if (model == null) {
             return;
@@ -295,22 +250,12 @@ public class Product implements Serializable {
         productName = model.productName;
         numOfSheets = model.numOfSheets;
         numOfParts = model.numOfParts;
+        size = model.size;
+        color = model.color;
         difficulty = model.difficulty;
-//        format = model.format;
+        price = model.price;
         imageSrc = model.imageSrc;
         link = model.link;
-//        hasInstruction = model.hasInstruction;
         categoryId = model.categoryId;
-        estimateTime = model.estimateTime;
     }
-
-//    @XmlTransient
-//    public Collection<Contribution> getContributionCollection() {
-//        return contributionCollection;
-//    }
-//
-//    public void setContributionCollection(Collection<Contribution> contributionCollection) {
-//        this.contributionCollection = contributionCollection;
-//    }
-
 }

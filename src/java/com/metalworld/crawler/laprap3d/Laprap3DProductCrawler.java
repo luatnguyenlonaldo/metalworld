@@ -102,16 +102,22 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         System.out.println("Name nek: " + name);
         int price = getProductPrice(eventReader);
         System.out.println("Price nek: " + price);
+        
+        String size = getSize(eventReader);
+        System.out.println("Size nek: "  + size);
+        
 
         Integer numOfSheets = getNumOfSheets(eventReader);
         System.out.println("Số tờ nèk: " + numOfSheets);
+        String color = getColor(eventReader);
+        System.out.println("Color nek: " + color);
         Integer difficulty = getDifficulty(eventReader);
         System.out.println("Độ khó nefk: " + difficulty);
         System.out.println("Category nek: "  + category);
 //        Integer numOfParts = getNumOfParts(eventReader);
 //        System.out.println("Số mảnh nefk: " + numOfParts);
 //        
-        Product product = new Product(price, name, numOfSheets, 0, difficulty, 
+        Product product = new Product(price, name, numOfSheets, 0, size, color, difficulty, 
                 price, imageSrc, pageUrl, category);
         return product;
     }
@@ -176,45 +182,6 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         return 0;
     }
 
-    private Integer getNumOfParts(XMLEventReader eventReader) {
-        XMLEvent event;
-        while (eventReader.hasNext()) {
-            event = (XMLEvent) eventReader.next();
-            if (event.isStartElement()) {
-                StartElement startElement = event.asStartElement();
-                if (ElementChecker.isElementWith(startElement, "label")) {
-                    event = (XMLEvent) eventReader.next();
-                    if (event.isEndElement()) {
-                        continue;
-                    }
-                    Characters chars = event.asCharacters();
-                    String text = chars.getData();
-
-                    if (text.contains("Số Mảnh Ghép")) {
-                        while (eventReader.hasNext()) {
-                            event = (XMLEvent) eventReader.next();
-                            if (event.isEndElement()) {
-                                continue;
-                            }
-                            if (event.isStartElement()) {
-                                StartElement tmpStartElement = event.asStartElement();
-                                if (ElementChecker.isElementWith(tmpStartElement, "span", "class", "swatch swatch-label circle")) {
-                                    event = (XMLEvent) eventReader.next();
-                                    if (event.isEndElement()) {
-                                        continue;
-                                    }
-                                    Characters charsElement = event.asCharacters();
-                                    return Integer.parseInt(charsElement.getData());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return 0;
-    }
-
     private Integer getNumOfSheets(XMLEventReader eventReader) {
         XMLEvent event;
         while (eventReader.hasNext()) {
@@ -253,6 +220,56 @@ public class Laprap3DProductCrawler extends BaseCrawler {
         element = element.replace(" ", "");
         element = element.replace(" ", "");
         return element.substring(0, element.indexOf(character));
+    }
+    
+    private String getSize(XMLEventReader eventReader) {
+        XMLEvent event;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "strong")) {
+                    event = (XMLEvent) eventReader.next();
+                    if (event.isEndElement()) {
+                        continue;
+                    }
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+
+                    if (text.contains("Kích thước sản phẩm sau khi lắp ráp")) {
+                        event = (XMLEvent) eventReader.next();
+                        event = (XMLEvent) eventReader.next();
+                        return event.asCharacters().getData();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    private String getColor(XMLEventReader eventReader) {
+        XMLEvent event;
+        while (eventReader.hasNext()) {
+            event = (XMLEvent) eventReader.next();
+            if (event.isStartElement()) {
+                StartElement startElement = event.asStartElement();
+                if (ElementChecker.isElementWith(startElement, "strong")) {
+                    event = (XMLEvent) eventReader.next();
+                    if (event.isEndElement()) {
+                        continue;
+                    }
+                    Characters chars = event.asCharacters();
+                    String text = chars.getData();
+
+                    if (text.contains("Màu sắc")) {
+                        event = (XMLEvent) eventReader.next();
+                        event = (XMLEvent) eventReader.next();
+                        return event.asCharacters().getData();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private Integer getDifficulty(XMLEventReader eventReader) {

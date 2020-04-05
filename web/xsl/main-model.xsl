@@ -26,70 +26,83 @@
                         <xsl:value-of select="name"/>
                     </div>
                     <div class="card-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>Số tờ</td>
-                                    <td>
-                                        <xsl:value-of select="num-of-sheets"/>
-                                    </td>
-                                </tr>
-                                
-                                <xsl:if test="string-length(num-of-parts) > 0">
-                                    <tr>
-                                        <td>Số chi tiết</td>
-                                        <td>
-                                            <xsl:value-of select="num-of-parts"/>
-                                        </td>
-                                    </tr>
-                                </xsl:if>
-                                
-                                <tr>
-                                    <td>Độ khó</td>
-                                    <td>
-                                        <xsl:value-of select="difficulty"/>
-                                    </td>
-                                </tr>
-                                
-                                <xsl:if test="string-length(format) > 0">
-                                    <tr>
-                                        <td>Định dạng</td>
-                                        <td>
-                                            <xsl:value-of select="format"/>
-                                        </td>
-                                    </tr>
-                                </xsl:if>
-                                
-                                <tr>
-                                    <td>Hướng dẫn</td>
-                                    <td>
-                                        <xsl:if test="has-instruction = 'true'">Có</xsl:if>
-                                        <xsl:if test="string-length(has-instruction) = 0">Không</xsl:if>
-                                        <xsl:if test="has-instruction = 'false'">Không</xsl:if>
-                                    </td>
-                                </tr>
-                                
-                                <xsl:if test="string-length(estimate-time) > 0">
-                                    <tr>
-                                        <td>Thời gian</td>
-                                        <td>
-                                            <xsl:if test="estimate-time &lt; 1">
-                                                <xsl:value-of select="format-number(estimate-time * 60, '###,###')"/>
-                                                phút
-                                            </xsl:if>
-                                            <xsl:if test="estimate-time >= 1">
-                                                <xsl:value-of select="format-number(estimate-time, '###,###')"/> 
-                                                giờ
-                                            </xsl:if>
-                                        </td>
-                                    </tr>
-                                </xsl:if>
-                            </tbody>
-                        </table>
+                        <xsl:choose>
+                            <xsl:when test="(num-of-sheets=0) and (num-of-parts=0) and (difficulty=0)">
+                                <div class="card-body">
+                                    <font color="red">
+                                        <h5>Hết hàng</h5>
+                                    </font>
+                                </div>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Số tờ</td>
+                                            <td>
+                                                <xsl:choose>
+                                                    <xsl:when test="num-of-sheets > 0">
+                                                        <xsl:value-of select="num-of-sheets"/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Số chi tiết</td>
+                                            <td>
+                                                <xsl:choose>
+                                                    <xsl:when test="num-of-parts > 0">
+                                                        <xsl:value-of select="num-of-parts"/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Kích thước</td>
+                                            <td>
+                                                <xsl:value-of select="size"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Màu sắc</td>
+                                            <td>
+                                                <xsl:value-of select="color"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Độ khó</td>
+                                            <td>
+                                                <xsl:choose>
+                                                    <xsl:when test="difficulty > 0">
+                                                        <xsl:value-of select="difficulty"/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Giá tiền</td>
+                                            <td>
+                                                <xsl:value-of select='format-number(price, "###,###")'/> VND
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="card-footer">
+                                    <a href="{link}" target="_blank" class="btn btn-lg btn-primary">Mua</a>
+                                </div>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </div>
-                    <div class="card-footer">
-                        <a href="{link}" target="_blank" class="btn btn-lg btn-primary">Tải xuống</a>
-                    </div>
+                    
                 </div>
                 <div class="contribute">
                     <font color="red">* Đóng góp: </font>

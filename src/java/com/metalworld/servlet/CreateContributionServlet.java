@@ -47,20 +47,34 @@ public class CreateContributionServlet extends HttpServlet {
         String skillLevel = request.getParameter("selectSkillLevel");
         try (PrintWriter out = response.getWriter()) {
             ContributionDAO contributionDAO = ContributionDAO.getInstance();
-            ContributionDAO dao = new ContributionDAO();
-            
             ProductDAO productDAO = new ProductDAO();
-            
-            
             Product product = productDAO.getModelById(Integer.parseInt(idProduct));
-            Contribution contribution = dao.saveContribution(new Contribution(0, email, Double.parseDouble(completionTime), Integer.parseInt(skillLevel), product));
-            
-            List<Contribution> contributions = contributionDAO.getAllContribution();
-            double[] result = updateCoefficient(contributions);
-            
-            boolean coe = getCoefficient(getServletContext().getRealPath("/"), 
-                    new Coefficient(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-            
+
+            Coefficient reqCoefficient = getCoefficient(getServletContext().getRealPath("/"));
+            double freeCoefficient;
+            double skillCoefficient;
+            double difficultyCoefficient;
+
+            if (reqCoefficient.getFreeCoefficient() != null
+                    && reqCoefficient.getSkillCoefficient() != null
+                    && reqCoefficient.getDifficultCoefficient() != null) {
+                freeCoefficient = Double.parseDouble(reqCoefficient.getFreeCoefficient());
+                skillCoefficient = Double.parseDouble(reqCoefficient.getSkillCoefficient());
+                difficultyCoefficient = Double.parseDouble(reqCoefficient.getDifficultCoefficient());
+
+                if (Double.parseDouble(completionTime) - (freeCoefficient
+                        + skillCoefficient * Double.parseDouble(skillLevel)
+                        + difficultyCoefficient * product.getDifficulty()) > 2) {
+                    Contribution contribution = contributionDAO.saveContribution(new Contribution(0, email, Double.parseDouble(completionTime), Integer.parseInt(skillLevel), product, false));
+                    if (contribution == null) {
+                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    }
+                } else {
+                    saveCoefficient(response, contributionDAO, email, completionTime, skillLevel, product);
+                }
+            } else {
+                saveCoefficient(response, contributionDAO, email, completionTime, skillLevel, product);
+            }
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
             Logger.getLogger(CreateContributionServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,52 +120,72 @@ public class CreateContributionServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private void saveCoefficient(HttpServletResponse response, ContributionDAO contributionDAO, String email, String completionTime, String skillLevel, Product product) {
+        Contribution contribution = contributionDAO.saveContribution(new Contribution(0, email, Double.parseDouble(completionTime), Integer.parseInt(skillLevel), product, true));
+        if (contribution == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+
+        List<Contribution> contributions = contributionDAO.getAllContribution();
+        double[] result = updateCoefficient(contributions);
+
+        boolean coe = getCoefficient(getServletContext().getRealPath("/"),
+                new Coefficient(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
+        if (!coe) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
+    private Coefficient getCoefficient(String realPath) {
+        return Coefficient.getCoefficient(realPath);
+    }
+
     private boolean getCoefficient(String realPath, Coefficient coefficient) {
         return Coefficient.updateCoefficient(realPath, coefficient);
     }
-    
+
     static double[] updateCoefficient(List<Contribution> contribution) {
         double[] skillLevel = new double[contribution.size()];
         double[] difficult = new double[contribution.size()];
         double[] time = new double[contribution.size()];
-        
+
         for (int i = 0; i < skillLevel.length; i++) {
             skillLevel[i] = contribution.get(i).getSkillLevel();
             difficult[i] = contribution.get(i).getProductId().getDifficulty();
             time[i] = contribution.get(i).getCompletionTime();
         }
-        
+
         double[][] x = new double[skillLevel.length][2];
         double[][] xBar = new double[skillLevel.length][3];
         double[][] y = new double[time.length][1];
         for (int i = 0; i < skillLevel.length; i++) {
             x[i][0] = skillLevel[i];
             x[i][1] = difficult[i];
-            
+
             xBar[i][0] = 1;
             xBar[i][1] = skillLevel[i];
             xBar[i][2] = difficult[i];
-            
+
             y[i][0] = time[i];
         }
-        
+
         double xBarTranspose[][] = new double[xBar[0].length][xBar.length];
         transpose(xBar, xBarTranspose);
-        
+
         SimpleMatrix firstMatrix = new SimpleMatrix(xBarTranspose);
         SimpleMatrix secondMatrix = new SimpleMatrix(xBar);
         SimpleMatrix resultMatrixA = firstMatrix.mult(secondMatrix);
-        
+
         SimpleMatrix yBar = new SimpleMatrix(y);
         SimpleMatrix resultMatrixB = firstMatrix.mult(yBar);
-        
+
         SimpleMatrix psoA = resultMatrixA.pseudoInverse();
         SimpleMatrix w = psoA.mult(resultMatrixB);
         double[] coefficient = w.getMatrix().data;
 
         return coefficient;
     }
-    
+
     static void transpose(double A[][], double B[][]) {
         int i, j;
         for (i = 0; i < A[0].length; i++) {

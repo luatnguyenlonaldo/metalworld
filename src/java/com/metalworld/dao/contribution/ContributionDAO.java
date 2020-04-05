@@ -76,7 +76,9 @@ public class ContributionDAO extends BaseDAO<Contribution, Integer>{
         try {
             EntityTransaction transaction = em.getTransaction();
             transaction.begin();
-            List<Contribution> contributions = em.createNamedQuery("Contribution.findAll").getResultList();
+            List<Contribution> contributions = em.createNamedQuery("Contribution.findAll")
+                    .setParameter("condition", true)
+                    .getResultList();
             transaction.commit();
             
             if (contributions == null) {

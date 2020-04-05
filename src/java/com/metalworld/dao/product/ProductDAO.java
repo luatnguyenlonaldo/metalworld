@@ -5,8 +5,6 @@
  */
 package com.metalworld.dao.product;
 
-import com.metalworld.config.product.DifficultyEstimation;
-import com.metalworld.config.product.ProductEstimation;
 import com.metalworld.constants.ConfigConstants;
 import com.metalworld.dao.BaseDAO;
 import com.metalworld.entities.Product;
@@ -115,73 +113,12 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
     public synchronized Product saveModelWhileCrawling(ServletContext context, Product model) {
         Product existedModel = getModelByLink(model.getLink());
         if (existedModel == null) {
-            refineModel(context, model);
             System.out.println("============== Save không được gì hết =============");
             return create(model);
         }
         System.out.println("=============== OK rồi nha ==============");
-        refineModel(context, model);
         model.setProductId(existedModel.getProductId());
         return update(model);
-    }
-    
-    public synchronized void refineModel(ServletContext context, Product model) {
-        ProductEstimation modelEstimation
-                = (ProductEstimation) context.getAttribute("PRODUCT_ESTIMATION");
-        if (modelEstimation == null) {
-            System.out.println("================== PRODUCT ESTIMASTION null roi =============");
-            return;
-        }
-
-        Integer numOfParts = model.getNumOfParts();
-        Integer numOfSheets = model.getNumOfSheets();
-
-        if (model.getDifficulty() == null || model.getDifficulty() == 0) {
-            if (numOfSheets != null && numOfSheets > 0) {
-                if (numOfParts != null && numOfParts > 0) {
-                    Double partsPerSheet = 1.0 * numOfParts / numOfSheets;
-                    Integer difficulty = estimateDifficulty(partsPerSheet, modelEstimation);
-
-                    model.setDifficulty(difficulty);
-                } else {
-                    Integer difficulty = estimateDifficulty(numOfSheets, modelEstimation);
-                    model.setDifficulty(difficulty);
-                }
-            }
-        }
-    }
-    
-    private synchronized Integer estimateDifficulty(Double partsPerSheet, ProductEstimation estimation) {
-        DifficultyEstimation lowestDifficulty = estimation.getDifficultyEstimation().get(0);
-
-        if (partsPerSheet <= lowestDifficulty.getMaxPartsPerSheet().doubleValue()) {
-            return lowestDifficulty.getDifficulty().intValue();
-        }
-
-        for (int i = 1; i < estimation.getDifficultyEstimation().size(); ++i) {
-            DifficultyEstimation de = estimation.getDifficultyEstimation().get(i);
-            if (partsPerSheet <= de.getMaxPartsPerSheet().doubleValue()) {
-                return de.getDifficulty().intValue();
-            }
-        }
-
-        return 0;
-    }
-
-    private synchronized Integer estimateDifficulty(Integer numOfSheets, ProductEstimation estimation) {
-        DifficultyEstimation lowestDifficulty = estimation.getDifficultyEstimation().get(0);
-
-        if (numOfSheets <= lowestDifficulty.getMaxNumberOfSheets().intValue()) {
-            return lowestDifficulty.getDifficulty().intValue();
-        }
-
-        for (int i = 1; i < estimation.getDifficultyEstimation().size(); ++i) {
-            DifficultyEstimation de = estimation.getDifficultyEstimation().get(i);
-            if (numOfSheets <= de.getMaxNumberOfSheets().intValue()) {
-                return de.getDifficulty().intValue();
-            }
-        }
-        return 0;
     }
 
     public long getCountModels() {
@@ -229,44 +166,6 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
             }
         }
         return new ArrayList<>();
-    }
-
-    /**
-     * get cached models from session scope
-     *
-     * @param session
-     * @param skillLevel
-     * @return
-     */
-    public List<Product> getAllModels(HttpSession session, int skillLevel) {
-        List<Product> models = (List<Product>) session.getAttribute("MODELS");
-        Long cacheTime = (Long) session.getAttribute("CACHE_TIME");
-
-        long now = System.currentTimeMillis();
-
-        ServletContext context = session.getServletContext();
-
-        if (models == null || cacheTime == null
-                || (now - cacheTime > ConfigConstants.CACHE_MODELS_TIMEOUT)) {
-
-            models = getAllModels(session.getServletContext());
-            estimateModelsMakingTime(context, models, skillLevel);
-
-            session.setAttribute("MODELS", models);
-            session.setAttribute("SKILL_LEVEL", skillLevel);
-            session.setAttribute("CACHE_TIME", now);
-        }
-
-        Integer cachedSkillLevel = (Integer) session.getAttribute("SKILL_LEVEL");
-        if (cachedSkillLevel == null || cachedSkillLevel != skillLevel) {
-            estimateModelsMakingTime(context, models, skillLevel);
-
-            session.setAttribute("MODELS", models);
-            session.setAttribute("SKILL_LEVEL", skillLevel);
-            session.setAttribute("CACHE_TIME", now);
-        }
-
-        return models;
     }
     
     /**
@@ -335,26 +234,5 @@ public class ProductDAO extends BaseDAO<Product, Integer>{
         }
 
         return models;
-    }
-
-    /**
-     * estimate making time for models
-     *
-     * @param context
-     * @param models
-     * @param skillLevel
-     */
-    private void estimateModelsMakingTime(ServletContext context, List<Product> models, int skillLevel) {
-        ProductEstimation estimation = (ProductEstimation) context.getAttribute("PRODUCT_ESTIMATION");
-        if (estimation == null) {
-//            estimation = ProductEstimation.getProductEstimation(context.getRealPath("/"));
-            context.setAttribute("MODEL_ESTIMATION", estimation);
-        }
-
-        final ProductEstimation me = estimation;
-
-        models.forEach((model) -> {
-            model.estimateMakingTime(me, skillLevel);
-        });
     }
 }

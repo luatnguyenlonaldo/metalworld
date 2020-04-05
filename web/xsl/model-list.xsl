@@ -27,7 +27,7 @@
     </xsl:template>
 
     <xsl:template match="product">
-        <div class="column col-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="column col-3 col-md-4 col-sm-6 col-xs-12">
             <div class="card">
                 <div class="card-image">
                     <div class="hover14">
@@ -43,31 +43,52 @@
                         <xsl:value-of select="name"/>
                     </div>
                 </div>
-                <div class="card-body">
-                    Số tờ: <xsl:value-of select="num-of-sheets"/>
-                    <br/>
-                    <xsl:if test="string-length(num-of-parts) > 0">
-                        Số chi tiết: <xsl:value-of select="num-of-parts"/>
-                        <br/>
-                    </xsl:if>
-                    Độ khó: <xsl:value-of select="difficulty"/>
-                    <br/>
-                    <xsl:if test="string-length(estimate-time) > 0">
-                        Thời gian: 
-                        <xsl:if test="estimate-time &lt; 1">
-                            <xsl:value-of select="format-number(estimate-time * 60, '###,###')"/>
-                            phút
-                        </xsl:if>
-                        <xsl:if test="estimate-time >= 1">
-                            <xsl:value-of select="format-number(estimate-time, '###,###')"/> 
-                            giờ
-                        </xsl:if>
-                        <br/>
-                    </xsl:if>
-                </div>
-                <div class="card-footer">
-                    <a href="/MetalWorld/product.jsp?id={id}" target="_blank">Xem chi tiết</a>
-                </div>
+                <xsl:choose>
+                    <xsl:when test="(num-of-sheets=0) and (num-of-parts=0) and (difficulty=0)">
+                        <div class="card-body">
+                            <font color="red">
+                                <h5>Hết hàng</h5>
+                            </font>
+                        </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <div class="card-body">
+                            Số tờ: 
+                            <xsl:choose>
+                                <xsl:when test="num-of-sheets > 0">
+                                    <xsl:value-of select="num-of-sheets"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <i>Chưa cập nhật</i>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <br/>
+                            Số chi tiết: 
+                            <xsl:choose>
+                                <xsl:when test="num-of-parts > 0">
+                                    <xsl:value-of select="num-of-parts"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <i>Chưa cập nhật</i>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <br/>
+                            Độ khó: 
+                            <xsl:choose>
+                                <xsl:when test="difficulty > 0">
+                                    <xsl:value-of select="difficulty"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <i>Chưa cập nhật</i>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <br/>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/MetalWorld/product.jsp?id={id}" target="_blank">Xem chi tiết</a>
+                        </div>
+                    </xsl:otherwise>
+                </xsl:choose>
             </div>
         </div>
     </xsl:template>

@@ -172,11 +172,8 @@ public class ProductDetailServlet extends HttpServlet {
         mainModelVector[3] = mainModel.getDifficulty();
         modelVector[3] = model.getDifficulty();
 
-        mainModelVector[4] = mainModel.getEstimateTime() != null ? mainModel.getEstimateTime() : 0;
-        modelVector[4] = model.getEstimateTime() != null ? model.getEstimateTime() : 0;
-
-        mainModelVector[5] = 1;
-        modelVector[5] = mainModel.getCategoryId().equals(model.getCategoryId()) ? 1 : 0;
+        mainModelVector[4] = 1;
+        modelVector[4] = mainModel.getCategoryId().equals(model.getCategoryId()) ? 1 : 0;
 
         double cosine = -1;
         double numerator = 0;

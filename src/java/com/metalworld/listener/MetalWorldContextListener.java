@@ -5,14 +5,11 @@
  */
 package com.metalworld.listener;
 
-import com.metalworld.categories_mapping.CategoryMapping;
 import com.metalworld.categories_mapping.CategoryMappings;
 import com.metalworld.config.crawler.CrawlerConfig;
-import com.metalworld.config.product.ProductEstimation;
 import com.metalworld.crawler.artpuzzle.ArtPuzzleThread;
 import com.metalworld.crawler.laprap3d.Laprap3DThread;
 import com.metalworld.dao.product.ProductDAO;
-import com.metalworld.difficult_mapping.DifficultMapping;
 import com.metalworld.difficult_mapping.DifficultMappings;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.DBUtils;
@@ -39,12 +36,6 @@ public class MetalWorldContextListener implements ServletContextListener {
         realPath = context.getRealPath("/");
         CategoryMappings categoryMappings = getCategoryMappings(realPath);
         context.setAttribute("CATEGORY_MAPPINGS", categoryMappings);
-        
-//        for (CategoryMapping categoryMapping : categoryMappings.getCategoryMapping()) {
-//            System.out.println("--- LOZZZ: " + categoryMapping.getName());
-//        }
-        ProductEstimation productEstimation = getProductEstimationConfig(realPath);
-        context.setAttribute("PRODUCT_ESTIMATION", productEstimation);
         DifficultMappings difficultMappings = getDifficultMappings(realPath);
         context.setAttribute("DIFFICULT_MAPPINGS", difficultMappings);
         
@@ -70,10 +61,6 @@ public class MetalWorldContextListener implements ServletContextListener {
 
     private CategoryMappings getCategoryMappings(String realPath) {
         return CategoryMappings.getCategoryMappings(realPath);
-    }
-
-    private ProductEstimation getProductEstimationConfig(String realPath) {
-        return ProductEstimation.getModelEstimation(realPath);
     }
     
     private DifficultMappings getDifficultMappings(String realPath) {

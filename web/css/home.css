@@ -11,7 +11,7 @@ and open the template in the editor.
 body {
     padding-left: 2em;
     padding-right: 2em;
-    background-image: url(../img/trianglify-lowres.png);
+    background-image: url(../img/background.jpg);
     background-size: 100%;
 }
 
@@ -20,6 +20,7 @@ body {
 }
 
 .heading-title {
+    margin-top: 15px;
     text-align: center;
 }
 
@@ -201,4 +202,36 @@ body {
 @keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
+}
+
+.table-model {
+    width: 100%;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+}
+.separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #fff;
+    margin-left: 45%;
+    margin-right: 45%;
+}
+.separator::before {
+    margin-right: 15px;
+}
+.separator::after {
+    margin-left: 15px;
+}
+
+.card-4 {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.text-label {
+    color: #fff;
 }
