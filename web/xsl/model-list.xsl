@@ -12,11 +12,11 @@
     <xsl:output method="html" indent="yes"/>
 
     <xsl:param name="pageSize" select="60"/>
-    <xsl:param name="isRelatedModels" select="'false'"/>
+    <xsl:param name="checked" select="'false'"/>
     
     <xsl:template match="product-list">
-        <xsl:if test="$isRelatedModels = 'true'">
-            <h5 class="text-italic">Mô hình tương tự:</h5>
+        <xsl:if test="$checked = 'true'">
+            <h5 class="suggestLabel">Có thể bạn quan tâm:</h5>
         </xsl:if>
         
         <xsl:for-each select="product[position() mod $pageSize = 1]">
@@ -43,15 +43,20 @@
                         <xsl:value-of select="name"/>
                     </div>
                 </div>
-                <xsl:choose>
-                    <xsl:when test="(num-of-sheets=0) and (num-of-parts=0) and (difficulty=0)">
+                <!--<xsl:choose>-->
+<!--                    <xsl:when test="(num-of-sheets=0) and (num-of-parts=0) and (difficulty=0)">
                         <div class="card-body">
                             <font color="red">
                                 <h5>Hết hàng</h5>
                             </font>
                         </div>
-                    </xsl:when>
-                    <xsl:otherwise>
+                    </xsl:when>-->
+                    <!--<xsl:otherwise>-->
+                        <div class="card-body">
+                            <div class="card-price">
+                                <xsl:value-of select='format-number(price, "###,###")'/> VND
+                            </div>
+                        </div>
                         <div class="card-body">
                             Số tờ: 
                             <xsl:choose>
@@ -87,8 +92,8 @@
                         <div class="card-footer">
                             <a href="/MetalWorld/product.jsp?id={id}" target="_blank">Xem chi tiết</a>
                         </div>
-                    </xsl:otherwise>
-                </xsl:choose>
+                    <!--</xsl:otherwise>-->
+                <!--</xsl:choose>-->
             </div>
         </div>
     </xsl:template>

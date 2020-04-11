@@ -147,7 +147,7 @@ public class ArtPuzzleProductCrawler extends BaseCrawler {
         System.out.println("Giá tiền nèk: " + price);
 
         Product product = new Product(0, name, numOfSheets, numOfParts, size, color, difficulty, price,
-                imageSrc, pageUrl, category);
+                imageSrc, pageUrl, category.getCategoryId());
         return product;
     }
 

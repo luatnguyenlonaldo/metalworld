@@ -26,15 +26,15 @@
                         <xsl:value-of select="name"/>
                     </div>
                     <div class="card-body">
-                        <xsl:choose>
+<!--                        <xsl:choose>
                             <xsl:when test="(num-of-sheets=0) and (num-of-parts=0) and (difficulty=0)">
                                 <div class="card-body">
                                     <font color="red">
                                         <h5>Hết hàng</h5>
                                     </font>
                                 </div>
-                            </xsl:when>
-                            <xsl:otherwise>
+                            </xsl:when>-->
+                            <!--<xsl:otherwise>-->
                                 <table class="table">
                                     <tbody>
                                         <tr>
@@ -66,13 +66,27 @@
                                         <tr>
                                             <td>Kích thước</td>
                                             <td>
-                                                <xsl:value-of select="size"/>
+                                                <xsl:choose>
+                                                    <xsl:when test="string-length(size) > 0">
+                                                        <xsl:value-of select="size"/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Màu sắc</td>
                                             <td>
-                                                <xsl:value-of select="color"/>
+                                                <xsl:choose>
+                                                    <xsl:when test="string-length(color) > 0">
+                                                        <xsl:value-of select="color"/>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </td>
                                         </tr>
                                         <tr>
@@ -91,16 +105,23 @@
                                         <tr>
                                             <td>Giá tiền</td>
                                             <td>
-                                                <xsl:value-of select='format-number(price, "###,###")'/> VND
+                                                <xsl:choose>
+                                                    <xsl:when test="price > 0">
+                                                        <xsl:value-of select='format-number(price, "###,###")'/> VND
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <i>Chưa cập nhật</i>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="card-footer">
-                                    <a href="{link}" target="_blank" class="btn btn-lg btn-primary">Mua</a>
+                                    <a href="{link}" target="_blank" class="btn btn-lg btn-primary">Tới nơi bán</a>
                                 </div>
-                            </xsl:otherwise>
-                        </xsl:choose>
+                            <!--</xsl:otherwise>-->
+                        <!--</xsl:choose>-->
                     </div>
                     
                 </div>

@@ -13,6 +13,7 @@ import com.metalworld.dao.product.ProductDAO;
 import com.metalworld.difficult_mapping.DifficultMappings;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.DBUtils;
+import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
@@ -71,7 +72,7 @@ public class MetalWorldContextListener implements ServletContextListener {
         return realPath;
     }
 
-    private List<Product> getAllModels() {
+    private List<Product> getAllModels() throws SQLException {
         ProductDAO productDAO = ProductDAO.getInstance();
         return productDAO.getAllModels();
     }

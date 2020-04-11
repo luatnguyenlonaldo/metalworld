@@ -53,13 +53,13 @@ function applyXslToModelDetail(modelDetail, xsl) {
     let xsltProcessor = new XSLTProcessor();
     xsltProcessor.importStylesheet(xsl);
 
-    let pageSize = 18;
+    let pageSize = 20;
     xsltProcessor.setParameter(null, 'pageSize', pageSize);
-    xsltProcessor.setParameter(null, 'isRelatedModels', 'true');
+    xsltProcessor.setParameter(null, 'checked', 'true');
 
     let resultHtml = xsltProcessor.transformToFragment(modelDetail, document);
 
-    let countRelatedModels = modelDetail.getElementsByTagName('model-list')[0].childElementCount;
+    let countRelatedModels = modelDetail.getElementsByTagName('product-list')[0].childElementCount;
 
     let div = document.getElementById('section-model-detail');
     div.innerHTML = '';
@@ -81,9 +81,12 @@ function showEmptyModelState() {
 
 function contributionInfor() {
     let email = document.getElementById('email').value;
+    if (!emailIsValid(email)) {
+        alert("Please input correct email format!!!");
+        return;
+    }
     let completionTime = document.getElementById('completionTime').value;
     let selectSkillLevel = document.getElementById('skillLevelContribution').value;
-    console.log(selectSkillLevel);
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -96,16 +99,16 @@ function contributionInfor() {
     xhr.overrideMimeType('application/xml');
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            var hiddenPopup = document.getElementById("popup1");
-            
             var x = document.getElementById("snackbar");
             x.className = "show";
             setTimeout(function () {
                 x.className = x.className.replace("show", "");
             }, 3000);
-        } else {
-            
         }
     };
     xhr.send(null);
+}
+
+function emailIsValid(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }

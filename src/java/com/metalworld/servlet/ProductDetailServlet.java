@@ -13,8 +13,8 @@ import com.metalworld.products.ProductList;
 import com.metalworld.utils.JAXBUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +62,7 @@ public class ProductDetailServlet extends HttpServlet {
         }
     }
     
-    private ProductList getRelatedModelListAndMainModel(HttpServletRequest request, Product returnMainModel, int id) {
+    private ProductList getRelatedModelListAndMainModel(HttpServletRequest request, Product returnMainModel, int id) throws SQLException {
         HttpSession session = request.getSession();
 
         List<Product> allModels = (List<Product>) session.getAttribute("MODELS");
@@ -171,9 +171,12 @@ public class ProductDetailServlet extends HttpServlet {
 
         mainModelVector[3] = mainModel.getDifficulty();
         modelVector[3] = model.getDifficulty();
+        
+        mainModelVector[4] = mainModel.getPrice();
+        modelVector[4] = model.getPrice();
 
-        mainModelVector[4] = 1;
-        modelVector[4] = mainModel.getCategoryId().equals(model.getCategoryId()) ? 1 : 0;
+        mainModelVector[5] = 1;
+        modelVector[5] = mainModel.getCategoryId().equals(model.getCategoryId()) ? 1 : 0;
 
         double cosine = -1;
         double numerator = 0;

@@ -6,6 +6,7 @@
 package com.metalworld.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -32,8 +35,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Contribution.findByEmail", query = "SELECT c FROM Contribution c WHERE c.email = :email")
     , @NamedQuery(name = "Contribution.findBySkillLevel", query = "SELECT c FROM Contribution c WHERE c.skillLevel = :skillLevel") 
     , @NamedQuery(name = "Contribution.findByCompletionTime", query = "SELECT c FROM Contribution c WHERE c.completionTime = :completionTime")
-    , @NamedQuery(name = "Contribution.findIsAgreed", query = "SELECT c FROM Contribution c WHERE c.isAgreed = :isAgreed")})
+    , @NamedQuery(name = "Contribution.findBySendingTime", query = "SELECT c FROM Contribution c WHERE c.sendingTime = :sendingTime")
+    , @NamedQuery(name = "Contribution.findIsAgreed", query = "SELECT c FROM Contribution c WHERE c.isAgreed = :isAgreed")
+    , @NamedQuery(name = "Contribution.getNumOfContributions", query = "SELECT count(m.id) FROM Contribution m")})
 public class Contribution implements Serializable {
+
+    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,20 +55,23 @@ public class Contribution implements Serializable {
     @Column(name = "CompletionTime", precision = 53)
     private Double completionTime;
     @JoinColumn(name = "ProductId", referencedColumnName = "ProductId")
-    @ManyToOne
-    private Product productId;
+    private int productId;
+    @Column(name = "SendingTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date sendingTime;
     @Column(name = "IsAgreed")
     private Boolean isAgreed;
 
     public Contribution() {
     }
 
-    public Contribution(Integer id, String email, Double completionTime, Integer skillLevel, Product productId, boolean isAgreed) {
+    public Contribution(Integer id, String email, Double completionTime, Integer skillLevel, int productId, Date sendingTime, boolean isAgreed) {
         this.id = id;
         this.email = email;
         this.completionTime = completionTime;
         this.skillLevel = skillLevel;
         this.productId = productId;
+        this.sendingTime = sendingTime;
         this.isAgreed = isAgreed;
     }
 
@@ -108,12 +118,20 @@ public class Contribution implements Serializable {
     public void setIsAgreed(Boolean isAgreed) {
         this.isAgreed = isAgreed;
     }
+    
+    public Date getSendingTime() {
+        return sendingTime;
+    }
 
-    public Product getProductId() {
+    public void setSendingTime(Date sendingTime) {
+        this.sendingTime = sendingTime;
+    }
+
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(Product productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
@@ -135,10 +153,5 @@ public class Contribution implements Serializable {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.metalworld.entities.Contribution[ id=" + id + " ]";
     }
 }

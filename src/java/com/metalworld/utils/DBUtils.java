@@ -5,17 +5,24 @@
  */
 package com.metalworld.utils;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.sql.DataSource;
 
 /**
  *
  * @author Lonaldo
  */
 public class DBUtils {
+
     private DBUtils() {
 
     }
@@ -34,5 +41,17 @@ public class DBUtils {
             }
         }
         return emf.createEntityManager();
+    }
+
+    public static Connection getConnection() throws NamingException, SQLException {
+        Connection con = null;
+        synchronized (LOCK) {
+            Context context = new InitialContext();
+            Context serverContext = (Context) context.lookup("java:comp/env");
+            DataSource ds = (DataSource) serverContext.lookup("DBUtils");
+            con = ds.getConnection();
+        }
+
+        return con;
     }
 }

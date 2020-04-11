@@ -15,6 +15,7 @@ import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -100,10 +101,19 @@ public class ArtPuzzlePageCrawler extends BaseCrawler implements Runnable {
             
             if (realName != null) {
                 CategoryDAO dao = CategoryDAO.getInstance();
-                category = dao.getFirstCategory(realName);
+                try {
+                    category = dao.getFirstCategory(realName);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 if (category == null) {
+                    System.out.println("OHHHHHH YEAHHHHH");
                     category = new Category(CategoryHelper.generateUUID(), realName);
-                    dao.create(category);
+                    try {
+                        dao.createCategory(category);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ArtPuzzlePageCrawler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
             return category;

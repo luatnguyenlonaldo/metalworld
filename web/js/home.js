@@ -41,7 +41,6 @@ function startSearching(url) {
         behavior: 'smooth'
     });
 
-    // ajax
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.overrideMimeType('application/xml');
@@ -52,7 +51,6 @@ function startSearching(url) {
                 handleResultModelsEmpty();
             } else {
                 handleResultModelsReceived(xml);
-                console.log("Đút phát nào !!!");
             }
         }
     };
@@ -95,14 +93,9 @@ function handleResultModelsReceived(resultDocument) {
     xhr.open('GET', 'xsl/result-models.xsl', true);
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.log("OK vô rồi!!!")
-            
             applyXslToResultModels(resultDocument, xhr.responseXML);
-        } else {
-            console.log("CONcac");
         }
     };
-
     xhr.send(null);
 }
 
@@ -115,7 +108,6 @@ function initResultPaging(pageCount) {
     }
 
     let pagingElement = createPagingElement(pageCount);
-
     paginationContainer.innerHTML = pagingElement;
 
     let firstPage = document.getElementById('result-page-1');
@@ -125,20 +117,20 @@ function initResultPaging(pageCount) {
 }
 
 function applyXslToResultModels(resultModels, xsl) {
-    console.log(resultModels);
+    //console.log(resultModels);
     let xsltProcessor = new XSLTProcessor();
     xsltProcessor.importStylesheet(xsl);
 
-    let pageSize = 18;
+    let pageSize = 20;
     xsltProcessor.setParameter(null, 'pageSize', pageSize);
     
-    console.log(resultModels);
+    //console.log(resultModels);
     let resultHtml = xsltProcessor.transformToFragment(resultModels, document);
 
     let countModels = resultModels.getElementsByTagName('product-list')[0].childElementCount;
 
     let div = document.getElementById('search-result');
-    div.innerHTML = '<h4 class="text-italic text-center">Tìm thấy ' + countModels + ' kết quả.</h4>';
+    div.innerHTML = '<h5 class="text-italic text-center">Tìm thấy ' + countModels + ' kết quả</h5>';
     div.appendChild(resultHtml);
     console.log("Có: " + countModels + " kết quả nhen.");
 

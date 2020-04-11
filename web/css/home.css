@@ -100,6 +100,7 @@ body {
 
 .pagination {
     display: block;
+    margin-left: 45%;
 }
 
 .pagination .page-item {
@@ -234,4 +235,13 @@ body {
 
 .text-label {
     color: #fff;
+}
+
+.card-price {
+    text-align: center;
+    font-weight: bold;
+}
+
+.suggestLabel {
+    margin-left: 8px;
 }

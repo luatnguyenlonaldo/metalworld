@@ -93,6 +93,6 @@
                 </div>
             </div>
         </div>
-        <div id="snackbar">Thanks for your support !!!</div>
+        <div id="snackbar">Thanks for your support!!!</div>
     </body>
 </html>

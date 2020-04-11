@@ -16,10 +16,12 @@ import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -63,7 +65,7 @@ public class ArtPuzzleProductListCrawler extends BaseCrawler implements Runnable
                 } else {
                     System.out.println("Co data nha!!!");
                 }
-                ProductDAO.getInstance().saveModelWhileCrawling(getContext(), product);
+                ProductDAO.getInstance().saveProductWhileCrawling(getContext(), product);
                 
                 if (ConfigConstants.DEBUG) {
                     System.out.println("DEBUG saved product " + product.getLink());
@@ -75,7 +77,7 @@ public class ArtPuzzleProductListCrawler extends BaseCrawler implements Runnable
                     }
                 }
             }
-        } catch (IOException | InterruptedException | XMLStreamException e) {
+        } catch (IOException | InterruptedException | XMLStreamException | NamingException | SQLException e) {
             Logger.getLogger(ArtPuzzleProductListCrawler.class.getName()).log(Level.SEVERE, null, e);
         }
     }

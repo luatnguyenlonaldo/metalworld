@@ -14,6 +14,7 @@ import com.metalworld.products.ProductList;
 import com.metalworld.utils.JAXBUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -83,7 +84,7 @@ public class SuggestProductServlet extends HttpServlet {
 
             out.write(resultModelsXml);
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException | SQLException ex) {
             Logger.getLogger(SuggestProductServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

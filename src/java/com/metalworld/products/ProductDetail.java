@@ -27,7 +27,7 @@ public class ProductDetail {
     @XmlElement(name = "main-model")
     private Product mainModel;
 
-    @XmlElement(name = "model-list")
+    @XmlElement(name = "product-list")
     private ProductList relatedModels;
 
     public ProductDetail() {

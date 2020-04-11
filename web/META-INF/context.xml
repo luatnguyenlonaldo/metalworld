@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/MetalWorld"/>
+<Context path="/MetalWorld">
+    <Resource name="DBUtils" auth="Container" type="javax.sql.DataSource"
+              driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+              url="jdbc:sqlserver://localhost:1433;databaseName=MetalWorld"
+              username="sa" password="1233"/>
+</Context>

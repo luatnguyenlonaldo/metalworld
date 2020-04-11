@@ -16,10 +16,12 @@ import com.metalworld.utils.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -68,7 +70,7 @@ public class Laprap3DProductListCrawler extends BaseCrawler implements Runnable 
                     System.out.println("Co data nha!!!");
                 }
                 
-                ProductDAO.getInstance().saveModelWhileCrawling(getContext(), product);
+                ProductDAO.getInstance().saveProductWhileCrawling(getContext(), product);
                 
                 if (ConfigConstants.DEBUG) {
                     System.out.println("DEBUG saved product " + product.getLink());
@@ -82,6 +84,8 @@ public class Laprap3DProductListCrawler extends BaseCrawler implements Runnable 
             }
         } catch (IOException | InterruptedException | XMLStreamException e) {
             Logger.getLogger(Laprap3DPageCrawler.class.getName()).log(Level.SEVERE, null, e);
+        } catch (NamingException | SQLException ex) {
+            Logger.getLogger(Laprap3DProductListCrawler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

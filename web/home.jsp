@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Welcome to Metal World</title>
+        <title>Metal World | Thế giới nằm trong tầm tay</title>
         <link rel="shortcut icon" href="img/icon.ico" />
         <link href="css/spectre.min.css" rel="stylesheet" type="text/css"/>
         <link href="css/spectre-exp.min.css" rel="stylesheet" type="text/css"/>
@@ -18,14 +18,14 @@
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
         <script src="js/home.js" type="text/javascript"></script>
     </head>
-    <body>
-        <div class="app-logo">
+    <body> 
+       <div class="app-logo">
             <a href="http://localhost:8084/MetalWorld/">
                 <img src="img/icon-metalworld.png" alt="MetalWorld" width="400" title="MetalWorld"/>
             </a>
         </div>
 
-        <h2 class="heading-title">Chọn mẫu mô hình kim loại</h2>
+        <h2 class="heading-title">Khám phá các mô hình kim loại</h2>
         <div class="container" style="width: 70%">
             <div class="columns">
                 <div class="column card-4" style="border-radius: 10px;">

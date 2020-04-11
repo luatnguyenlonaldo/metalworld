@@ -103,8 +103,8 @@ public class Product implements Serializable {
     private String link;
 
     @JoinColumn(name = "CategoryId", referencedColumnName = "CategoryId")
-    @ManyToOne
-    private Category categoryId;
+//    @ManyToOne
+    private String categoryId;
 
     public Product() {
     }
@@ -115,7 +115,7 @@ public class Product implements Serializable {
 
     public Product(Integer productId, String productName, Integer numOfSheets, Integer numOfParts,
             String size, String color, Integer difficulty, Integer price, String imageSrc, String link,
-            Category categoryId) {
+            String categoryId) {
         this.productId = productId;
         this.productName = productName;
         this.numOfSheets = numOfSheets;
@@ -142,7 +142,7 @@ public class Product implements Serializable {
     }
 
     public void setProductName(String name) {
-        this.productName = productName;
+        this.productName = name;
     }
 
     public Integer getNumOfSheets() {
@@ -209,11 +209,11 @@ public class Product implements Serializable {
         this.link = link;
     }
 
-    public Category getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Category categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 
