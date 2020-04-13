@@ -36,4 +36,7 @@ public class ConfigConstants {
      * maximum number of related models suggested for a specific model
      */
     public static final int MAX_RELATED_MODELS = 18*3;
+    
+    public static final int LOWER_LIMIT = -2;
+    public static final int UPPER_LIMIT = 2;
 }

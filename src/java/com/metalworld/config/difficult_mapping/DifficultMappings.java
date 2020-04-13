@@ -4,7 +4,7 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2020.03.18 at 10:55:23 AM ICT 
 //
-package com.metalworld.difficult_mapping;
+package com.metalworld.config.difficult_mapping;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -10,7 +10,7 @@ import com.metalworld.config.crawler.CrawlerConfig;
 import com.metalworld.crawler.artpuzzle.ArtPuzzleThread;
 import com.metalworld.crawler.laprap3d.Laprap3DThread;
 import com.metalworld.dao.product.ProductDAO;
-import com.metalworld.difficult_mapping.DifficultMappings;
+import com.metalworld.config.difficult_mapping.DifficultMappings;
 import com.metalworld.entities.Product;
 import com.metalworld.utils.DBUtils;
 import java.sql.SQLException;
@@ -70,10 +70,5 @@ public class MetalWorldContextListener implements ServletContextListener {
 
     public static String getRealPath() {
         return realPath;
-    }
-
-    private List<Product> getAllModels() throws SQLException {
-        ProductDAO productDAO = ProductDAO.getInstance();
-        return productDAO.getAllModels();
     }
 }

@@ -64,13 +64,17 @@ public class ProductDetailServlet extends HttpServlet {
     
     private ProductList getRelatedModelListAndMainModel(HttpServletRequest request, Product returnMainModel, int id) throws SQLException {
         HttpSession session = request.getSession();
-
-        List<Product> allModels = (List<Product>) session.getAttribute("MODELS");
-        if (allModels == null) {
-            ServletContext context = session.getServletContext();
-            ProductDAO modelDAO = ProductDAO.getInstance();
-            allModels = modelDAO.getAllModels(context);
-        }
+        
+        
+        ProductDAO dao = new ProductDAO();
+        List<Product> allModels = dao.getAllModels();
+//
+//        List<Product> allModels = (List<Product>) session.getAttribute("MODELS");
+//        if (allModels == null) {
+//            ServletContext context = session.getServletContext();
+//            ProductDAO modelDAO = ProductDAO.getInstance();
+//            allModels = modelDAO.getAllModels(context);
+//        }
 
         int modelId = id;
 

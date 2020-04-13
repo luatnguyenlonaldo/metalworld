@@ -5,6 +5,7 @@
  */
 package com.metalworld.dao.contribution;
 
+import com.metalworld.constants.ConfigConstants;
 import com.metalworld.dao.BaseDAO;
 import com.metalworld.dao.category.CategoryDAO;
 import com.metalworld.dao.product.ProductDAO;
@@ -16,6 +17,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -46,14 +49,30 @@ public class ContributionDAO extends BaseDAO<Contribution, Integer> {
         return instance;
     }
 
-    public void saveContribution(Contribution contribution) throws SQLException {
+    public boolean saveContribution(Contribution contribution) throws SQLException {
         Contribution existedContribution = getContributionByEmail(contribution.getEmail());
+        boolean result = false;
         if (existedContribution == null) {
-            createContribution(contribution);
+            createContribution(contribution, convertDateTimeToString(contribution));
+            result = true;
+        } else {
+            long now = System.currentTimeMillis();
+            long lastContribute = existedContribution.getSendingTime().getTime();
+            if (now - lastContribute > ConfigConstants.CACHE_MODELS_TIMEOUT) {
+                createContribution(contribution, convertDateTimeToString(contribution));
+                result = true;
+            }
         }
+        return result;
     }
-    
-    private void createContribution(Contribution contribution) throws SQLException {
+
+    private String convertDateTimeToString(Contribution contribution) {
+        String pattern = "MM-dd-yyyy HH:mm:ss";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(contribution.getSendingTime());
+    }
+
+    private void createContribution(Contribution contribution, String time) throws SQLException {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -65,7 +84,7 @@ public class ContributionDAO extends BaseDAO<Contribution, Integer> {
                 cstmt.setInt(2, contribution.getProductId());
                 cstmt.setInt(3, contribution.getSkillLevel());
                 cstmt.setDouble(4, contribution.getCompletionTime());
-                cstmt.setDate(5, (Date) contribution.getSendingTime());
+                cstmt.setString(5, time);
                 cstmt.setBoolean(6, contribution.getIsAgreed());
                 cstmt.execute();
             }

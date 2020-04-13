@@ -6,7 +6,7 @@
 package com.metalworld.servlet;
 
 import com.metalworld.config.coefficient.Coefficient;
-import com.metalworld.constant.Constant;
+import com.metalworld.constants.ConfigConstants;
 import com.metalworld.dao.contribution.ContributionDAO;
 import com.metalworld.dao.product.ProductDAO;
 import com.metalworld.entities.Contribution;
@@ -69,11 +69,14 @@ public class CreateContributionServlet extends HttpServlet {
                     double requestTime = Double.parseDouble(completionTime) - (freeCoefficient
                             + skillCoefficient * Double.parseDouble(skillLevel)
                             + difficultyCoefficient * product.getDifficulty());
-                    if (requestTime > Constant.UPPER_LIMIT || requestTime < Constant.LOWER_LIMIT) {
+                    if (requestTime > ConfigConstants.UPPER_LIMIT || requestTime < ConfigConstants.LOWER_LIMIT) {
                         contributionDAO.saveContribution(
                                 new Contribution(0, email, Double.parseDouble(completionTime),
                                         Integer.parseInt(skillLevel), product.getProductId(), new Date(), false));
-                        
+//                        if (!save) {
+//                            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//                        }
+
                     } else {
                         saveCoefficient(response, contributionDAO, email, completionTime, skillLevel, product.getProductId());
                     }
@@ -129,17 +132,18 @@ public class CreateContributionServlet extends HttpServlet {
     }// </editor-fold>
 
     private void saveCoefficient(HttpServletResponse response, ContributionDAO contributionDAO, String email, String completionTime, String skillLevel, int productId) throws SQLException {
-        contributionDAO.saveContribution(
+        boolean save = contributionDAO.saveContribution(
                 new Contribution(0, email, Double.parseDouble(completionTime),
                         Integer.parseInt(skillLevel), productId, new Date(), true));
+        if (save) {
+            List<Contribution> contributions = contributionDAO.getAllContribution();
+            double[] result = updateCoefficient(contributions);
 
-        List<Contribution> contributions = contributionDAO.getAllContribution();
-        double[] result = updateCoefficient(contributions);
-
-        boolean coe = getCoefficient(getServletContext().getRealPath("/"),
-                new Coefficient(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
-        if (!coe) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            boolean coe = getCoefficient(getServletContext().getRealPath("/"),
+                    new Coefficient(String.valueOf(result[0]), String.valueOf(result[1]), String.valueOf(result[2])));
+            if (!coe) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         }
     }
 
@@ -156,14 +160,18 @@ public class CreateContributionServlet extends HttpServlet {
         return Coefficient.updateCoefficient(realPath, coefficient);
     }
 
-    static double[] updateCoefficient(List<Contribution> contribution) {
+    static double[] updateCoefficient(List<Contribution> contribution) throws SQLException {
         double[] skillLevel = new double[contribution.size()];
         double[] difficult = new double[contribution.size()];
         double[] time = new double[contribution.size()];
 
         for (int i = 0; i < skillLevel.length; i++) {
             skillLevel[i] = contribution.get(i).getSkillLevel();
-//            difficult[i] = contribution.get(i).;
+
+            ProductDAO dao = new ProductDAO();
+            Product product = dao.getModelById(contribution.get(i).getProductId());
+            difficult[i] = product.getDifficulty();
+
             time[i] = contribution.get(i).getCompletionTime();
         }
 

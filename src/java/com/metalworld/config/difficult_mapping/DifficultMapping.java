@@ -6,7 +6,7 @@
 //
 
 
-package com.metalworld.difficult_mapping;
+package com.metalworld.config.difficult_mapping;
 
 import java.util.ArrayList;
 import java.util.List;

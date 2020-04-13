@@ -5,8 +5,8 @@
  */
 package com.metalworld.utils;
 
-import com.metalworld.difficult_mapping.DifficultMapping;
-import com.metalworld.difficult_mapping.DifficultMappings;
+import com.metalworld.config.difficult_mapping.DifficultMapping;
+import com.metalworld.config.difficult_mapping.DifficultMappings;
 import javax.servlet.ServletContext;
 
 /**
